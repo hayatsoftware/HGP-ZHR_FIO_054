@@ -1,0 +1,6 @@
+<c:FragmentDefinition xmlns="sap.m"
+    xmlns:c="sap.ui.core">
+    <SelectDialog title="Select Item" confirm="confirmSHDialog" search="searchDialogSH" cancel="closeDialogSH" items="{SH>/}">
+        <StandardListItem title="{SH>Id}" description="{SH>Name}" iconDensityAware="false" iconInset="false" type="Active" />
+    </SelectDialog>
+</c:FragmentDefinition>

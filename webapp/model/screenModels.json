@@ -1,0 +1,45 @@
+{
+    "screenEditableVisible": {
+        "GeneralEditable": true,
+        "SeyahatBolgesi": false,
+        "UserList": false
+    },
+    "travelHeader": {
+        "GrupSeyahatNo": "",
+        "CountryName": "",
+        "CountryCode": "",
+        "RegionName": "",
+        "RegionCode": "",
+        "Arrival": "",
+        "Departure": "",
+        "Purpose": "",
+        "TripActivity": "",
+        "Note": "",
+        "LocationEnd":""
+    },
+    "travelItem": {
+        "Username": "",
+        "Pernr": "",
+        "FirstName": "",
+        "LastName": "",
+        "WbsElement": "",
+        "InternalOrder": "",
+        "CostCenter": "",
+        "CostCenterName": "",
+        "WbsElementName": "",
+        "CompanyCode": "",
+        "InternalOrderName": "",
+        "ControllingArea": "",
+        "PlansText": "",
+        "Plans": ""
+    },
+    "mandatoryFieldsCreateTravel": {
+        "Purpose": "idPurpose",
+        "TripActivity": "idTripActivity",
+        "Departure": "idDeparture",
+        "Arrival": "idArrival",
+        "CountryCode": "idCountryCode",
+        "RegionCode": "idRegionCode",
+        "Note": "idNote"
+    }
+}

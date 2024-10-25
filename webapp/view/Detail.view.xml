@@ -1,0 +1,216 @@
+<mvc:View controllerName="com.hayat.grupseyahat.grupseyahattalebi.controller.Detail"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	xmlns:form="sap.ui.layout.form"
+	xmlns:c="sap.ui.core" displayBlock="true" height="100%" busyIndicatorDelay="0">
+	<Page floatingFooter="true">
+		<headerContent>
+			<Button icon="sap-icon://full-screen" id="enterFullScreen" visible="{= !${device>/system/phone} &amp;&amp; !${appView>/actionButtonsInfo/midColumn/fullScreen}}" press="toggleFullScreen" />
+			<Button icon="sap-icon://exit-full-screen" id="exitFullScreen" visible="{= !${device>/system/phone} &amp;&amp; ${appView>/actionButtonsInfo/midColumn/fullScreen}}" press="toggleFullScreen" />
+			<Button icon="sap-icon://decline" id="closeColumn" press=".onCloseDetailPress" />
+		</headerContent>
+		<content>
+			<Panel headerText="{i18n>travelDetail}">
+				<form:Form>
+					<form:layout>
+						<form:ResponsiveGridLayout adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" columnsXL="1" columnsL="1" singleContainerFullSize="false" />
+					</form:layout>
+					<form:formContainers>
+						<form:FormContainer>
+							<form:formElements>
+								<form:FormElement label="{i18n>reason}">
+									<form:fields>
+										<Text text="{Header>/Purpose}" />
+									</form:fields>
+								</form:FormElement>
+								<form:FormElement label="{i18n>purpose}">
+									<form:fields>
+										<Text text="{Header>/TripActivityName}" />
+									</form:fields>
+								</form:FormElement>
+								<form:FormElement label="{i18n>startDate}">
+									<form:fields>
+										<Text text="{
+											path: 'Header>/Departure',
+											type: 'sap.ui.model.type.Date',
+											formatOptions: {
+												pattern: 'dd-MM-YYYY',
+												UTC: true
+											}
+										}" />
+									</form:fields>
+								</form:FormElement>
+								<form:FormElement label="{i18n>endDate}">
+									<form:fields>
+										<Text text="{
+											path: 'Header>/Arrival',
+											type: 'sap.ui.model.type.Date',
+											formatOptions: {
+												pattern: 'dd-MM-YYYY',
+												UTC: true
+											}
+										}" />
+									</form:fields>
+								</form:FormElement>
+								<form:FormElement label="{i18n>country}">
+									<form:fields>
+										<Text text="{= ${Header>/CountryCode} ? ${Header>/CountryName} + ' (' + ${Header>/CountryCode} + ')' : ''}" />
+									</form:fields>
+								</form:FormElement>
+								<form:FormElement label="{i18n>region}" visible="{/SeyahatBolgesi}">
+									<form:fields>
+										<Text text="{= ${Header>/RegionCode} ? ${Header>/RegionName} + ' (' + ${Header>/RegionCode} + ')' : ''}" />
+									</form:fields>
+								</form:FormElement>
+								<form:FormElement label="{i18n>reasonText}" visible="{/SeyahatBolgesi}">
+									<form:fields>
+										<TextArea value="{Header>/Note}" editable="false" />
+									</form:fields>
+								</form:FormElement>
+								<form:FormElement label="{i18n>place}">
+									<form:fields>
+										<Text text="{Header>/LocationEnd}" />
+									</form:fields>
+								</form:FormElement>
+							</form:formElements>
+						</form:FormContainer>
+					</form:formContainers>
+				</form:Form>
+			</Panel>
+			<Panel headerText="{i18n>USERLIST}" visible="{/UserList}">
+				<Table  items="{UserCurrentList>/}" updateFinished="onLoad">
+					<headerToolbar>
+						<OverflowToolbar>
+							<content>
+								<Title text="{i18n>USERCURLIST}" level="H2" />
+							</content>
+						</OverflowToolbar>
+					</headerToolbar>
+					<columns>
+						<Column demandPopin="true" minScreenWidth="Tablet">
+							<Text text="{i18n>PERNR}" />
+						</Column>
+						<Column demandPopin="true" minScreenWidth="Tablet">
+							<Text text="{i18n>ENAME}" />
+						</Column>
+						<Column demandPopin="true" minScreenWidth="Tablet">
+							<Text text="{i18n>TITLE}" />
+						</Column>
+						<Column demandPopin="true" minScreenWidth="Tablet">
+							<Text text="{i18n>COSTCENTER}" />
+						</Column>
+						<Column demandPopin="true" minScreenWidth="Tablet">
+							<Text text="{i18n>INTERNALORDER}" />
+						</Column>
+						<Column demandPopin="true" minScreenWidth="Tablet">
+							<Text text="{i18n>WBSELEMENT}" />
+						</Column>
+					</columns>
+					<items>
+						<ColumnListItem>
+							<cells>
+								<Text text="{UserCurrentList>Pernr}" />
+								<Text text="{UserCurrentList>FirstName} {UserCurrentList>LastName}" />
+								<Text text="{UserCurrentList>PlansText}" />
+								<VBox>
+									<HBox>
+										<Text text="{UserCurrentList>CostCenter}" />
+									</HBox>
+									<HBox>
+										<Text text="{UserCurrentList>CostCenterName}" />
+									</HBox>
+								</VBox>
+								<VBox>
+									<HBox>
+										<Text text="{UserCurrentList>InternalOrder}" />
+									</HBox>
+									<HBox>
+										<Text text="{UserCurrentList>InternalOrderName}" />
+									</HBox>
+								</VBox>
+								<VBox>
+									<HBox>
+										<Text text="{UserCurrentList>WbsElement}"/>
+									</HBox>
+									<HBox>
+										<Text text="{UserCurrentList>WbsElementName}" />
+									</HBox>
+								</VBox>
+							</cells>
+						</ColumnListItem>
+					</items>
+				</Table>
+				<Table id="idUserScreenList" items="{UserList>/}" mode="MultiSelect" updateFinished="onLoad">
+					<headerToolbar>
+						<OverflowToolbar>
+							<content>
+								<Title text="{i18n>USERLIST}" level="H2" />
+								<Button icon="sap-icon://add" text="{i18n>ROWADD}" press="onAddRow" enabled="{Header>/Editable}"/>
+								<Button icon="sap-icon://delete" text="{i18n>ROWDEL}" press="onDeleteRow" enabled="{Header>/Editable}"/>
+							</content>
+						</OverflowToolbar>
+					</headerToolbar>
+					<columns>
+						<Column demandPopin="true" minScreenWidth="Tablet">
+							<Text text="{i18n>PERNR}" />
+						</Column>
+						<Column demandPopin="true" minScreenWidth="Tablet">
+							<Text text="{i18n>ENAME}" />
+						</Column>
+						<Column demandPopin="true" minScreenWidth="Tablet">
+							<Text text="{i18n>TITLE}" />
+						</Column>
+						<Column demandPopin="true" minScreenWidth="Tablet">
+							<Text text="{i18n>COSTCENTER}" />
+						</Column>
+						<Column demandPopin="true" minScreenWidth="Tablet">
+							<Text text="{i18n>INTERNALORDER}" />
+						</Column>
+						<Column demandPopin="true" minScreenWidth="Tablet">
+							<Text text="{i18n>WBSELEMENT}" />
+						</Column>
+					</columns>
+					<items>
+						<ColumnListItem>
+							<cells>
+								<Input value="{UserList>Pernr}" maxLength="8" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="onUserSearchHelp" />
+								<Text text="{UserList>FirstName} {UserList>LastName}" />
+								<Text text="{UserList>PlansText}" />
+								<VBox>
+									<HBox>
+										<Text text="{UserList>CostCenter}" />
+									</HBox>
+									<HBox>
+										<Text text="{UserList>CostCenterName}" />
+									</HBox>
+								</VBox>
+								<VBox>
+									<HBox>
+										<Text text="{UserList>InternalOrder}" />
+									</HBox>
+									<HBox>
+										<Text text="{UserList>InternalOrderName}" />
+									</HBox>
+								</VBox>
+								<VBox>
+									<HBox>
+										<Input value="{UserList>WbsElement}" valueHelpOnly="true" showValueHelp="true" required="true" valueHelpRequest="onValueHelpGeneral($event,'wbselement','')" />
+									</HBox>
+									<HBox>
+										<Text text="{UserList>WbsElementName}" />
+									</HBox>
+								</VBox>
+							</cells>
+						</ColumnListItem>
+					</items>
+				</Table>
+			</Panel>
+		</content>
+		<footer>
+			<OverflowToolbar>
+				<ToolbarSpacer />
+				<Button text="{i18n>SAVE}" icon="sap-icon://save" press="onSaveCreateTravel" enabled="{Header>/Editable}"/>
+			</OverflowToolbar>
+		</footer>
+	</Page>
+</mvc:View>

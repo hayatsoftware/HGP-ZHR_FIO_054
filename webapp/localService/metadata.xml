@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZHR_PROJ_041_SRV" xml:lang="tr" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+            <EntityType Name="Countries" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Ülke" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="15" sap:unicode="false" sap:label="Tanım" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="Region" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Regionid"/>
+                </Key>
+                <Property Name="Regionid" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Seyahat bölgesi" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="25" sap:unicode="false" sap:label="Ülke tanımı" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Countryid" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Ülke" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="CostCenter" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Masraf yeri" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Tanım" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Controllingarea" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="İşlev alanı" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Personincharge" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Karakter alanı uzunluğu 12" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Type" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Karakter alanı uzunluğu 10" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Tanım" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="WbsElement" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Objnr"/>
+                </Key>
+                <Property Name="Objnr" Type="Edm.String" Nullable="false" MaxLength="22" sap:unicode="false" sap:label="Nesne numarası" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Post1" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Tanım" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Posid" Type="Edm.String" Nullable="false" MaxLength="24" sap:unicode="false" sap:label="PYP öğesi" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityContainer Name="ZHR_PROJ_041_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="CountriesSet" EntityType="ZHR_PROJ_041_SRV.Countries" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="RegionSet" EntityType="ZHR_PROJ_041_SRV.Region" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="CostCenterSet" EntityType="ZHR_PROJ_041_SRV.CostCenter" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="WbsElementSet" EntityType="ZHR_PROJ_041_SRV.WbsElement" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+            </EntityContainer>
+            <atom:link rel="self" href="http://mobiltest.hayat.com.tr/sap/opu/odata/sap/ZHR_PROJ_041_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="http://mobiltest.hayat.com.tr/sap/opu/odata/sap/ZHR_PROJ_041_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

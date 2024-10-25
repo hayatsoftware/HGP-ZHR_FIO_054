@@ -1,0 +1,26 @@
+<c:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:c="sap.ui.core"
+     xmlns:f="sap.f"
+>
+<Dialog title="{i18n>PERSONALSEARCH}">
+    <content>
+        <VBox class="sapUiTinyMargin">
+            <MessageStrip text="{i18n>refPositionInfo}" showIcon="true" class="sapUiTinyMarginBottom" />
+            <SearchField search="onSearchPers" />
+        </VBox>
+        <List items="{PersonalList>/}" growing="true" mode="SingleSelect" growingThreshold="10" growingScrollToLoad="true">
+            <CustomListItem type="Active">
+                <HBox>
+                    <f:Avatar class="sapUiTinyMarginTop sapUiTinyMarginBegin" src="/sap/opu/odata/sap/HCM_EMPLOYEE_LOOKUP_SRV/EmployeeInfoSet('{Pernr}')/$value" displaySize="M" displayShape="Circle" />
+                    <ObjectIdentifier class="sapUiSmallMarginTop sapUiSmallMarginBegin" title="{Ename}" text="{Pernr}" titleActive="false" />
+                </HBox>
+            </CustomListItem>
+        </List>
+    </content>
+    <buttons>
+        <Button text="{i18n>ok}" type="Emphasized" press="onPersValueConfirm" />
+        <Button text="{i18n>close}" type="Reject" press="closeDialogSH" />
+    </buttons>
+</Dialog>
+</c:FragmentDefinition>
