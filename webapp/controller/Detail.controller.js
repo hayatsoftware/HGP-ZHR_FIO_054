@@ -52,7 +52,6 @@ sap.ui.define([
 			} else {
 				this.getModel("appView").setProperty("/layout", this.getModel("appView").getProperty("/previousLayout"))
 			}
-
 		},
 		onCloseDetailPress: function () {
 			this.getModel("appView").setProperty("/actionButtonsInfo/midColumn/fullScreen", false);

@@ -1,7 +1,8 @@
 <mvc:View controllerName="com.hayat.grupseyahat.grupseyahattalebi.controller.List"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
-    xmlns:c="sap.ui.core" displayBlock="true" height="100%" busyIndicatorDelay="0">
+    xmlns:c="sap.ui.core"
+    xmlns:html="http://www.w3.org/1999/xhtml" displayBlock="true" height="100%" busyIndicatorDelay="0">
     <Page title="{listView>/title}" enableScrolling="true" floatingFooter="true">
 
         <List id="list" width="auto" class="sapFDynamicPageAlignContent" items="{
@@ -14,6 +15,9 @@
             }" busyIndicatorDelay="{listView>/delay}" noDataText="{listView>/noDataText}" mode="{= ${device>/system/phone} ? 'None' : 'SingleSelectMaster'}" growing="true" growingScrollToLoad="true" updateFinished=".onUpdateFinished" selectionChange=".onSelectionChange">
             <headerToolbar>
                 <OverflowToolbar>
+                    <ObjectMarker type="Flagged"></ObjectMarker>
+                     <Text text="{i18n>grupTravel}"/>
+                    <ToolbarSpacer ></ToolbarSpacer>
                     <SearchField id="searchField" search=".onSearch" showRefreshButton="true" width="auto">
                         <layoutData>
                             <OverflowToolbarLayoutData minWidth="150px" maxWidth="240px" shrinkable="true" priority="NeverOverflow" />
@@ -23,13 +27,21 @@
             </headerToolbar>
             <items>
 
-                <ObjectListItem type="Navigation" press=".onSelectionChange" title="{Purpose}">
+                <ObjectListItem type="Navigation" press=".onSelectionChange" title="{Purpose}-{TripActivityName}">
+                    <customData>
+                        <c:CustomData key="grupSeyahatCSS" value="{= ${Grup} ? 'X' : '' }" writeToDom="true" />
+                    </customData>
+
                     <firstStatus>
-                        <ObjectStatus text="{TripActivityName}" />
+                        <ObjectStatus text="{StatusText}" state="{= ${Status} === '1' ? 'Warning' : ${Status} === '2' ? 'Success' : ${Status} === '3' ? 'Error' : 'None' }" />
                     </firstStatus>
+
                     <ObjectAttribute text="{CountryName}" />
                     <ObjectAttribute text="{RegionName}" />
                     <ObjectAttribute text="{path:'Arrival', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd/MM/yyyy'}}-{path:'Departure', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd/MM/yyyy'}}" />
+                    <markers>
+                        <ObjectMarker type="Flagged" visible="{Grup}" />
+                    </markers>
                 </ObjectListItem>
             </items>
         </List>

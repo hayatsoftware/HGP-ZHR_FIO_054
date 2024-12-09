@@ -1,1 +1,10 @@
-/* Enter your custom styles here */
+.grupsTravel {
+
+    border-left: 8px solid red;
+    border-radius: 2px;
+    padding-left: 3px;
+    margin: 0 5px;
+  }
+  tr[data-grupSeyahatCSS="X"] td:nth-child(2) {
+    border-left: 8px solid red;
+  }

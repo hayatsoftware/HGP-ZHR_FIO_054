@@ -1,6 +1,7 @@
 {
-  "name": "grup_seyahat_talebi",
+  "name": "com.hayat.grupseyahat.grupseyahattalebi",
   "version": "0.0.1",
+  "private": true,
   "description": "Grup Seyahat Talebi Oluşturma",
   "keywords": [
     "ui5",
@@ -9,11 +10,12 @@
   ],
   "main": "webapp/index.html",
   "dependencies": {},
-  "devDependencies": {
-    "@ui5/cli": "^3.0.0",
-    "@sap/ux-ui5-tooling": "1",
-    "@sap-ux/ui5-middleware-fe-mockserver": "2"
-  },
+ "devDependencies": {
+		"@sap-ux/ui5-proxy-middleware": "^1.4.13",
+		"@sap/ux-ui5-tooling": "^1.15.6",
+		"@ui5/cli": "^4.0.11",
+		"rimraf": "^6.0.1"
+	},
   "scripts": {
     "start": "fiori run --open \"test/flpSandbox.html?sap-client=100&sap-ui-xx-viewCache=false#comhayatgrupseyahatgrupseyahat-display\"",
     "start-local": "fiori run --config ./ui5-local.yaml --open \"test/flpSandbox.html?sap-client=100&sap-ui-xx-viewCache=false#comhayatgrupseyahatgrupseyahat-display\"",

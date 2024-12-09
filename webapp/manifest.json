@@ -91,7 +91,7 @@
     },
     "routing": {
       "config": {
-       "routerClass": "sap.f.routing.Router",
+       "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
         "viewPath": "com.hayat.grupseyahat.grupseyahattalebi.view",
         "controlId": "layout",
