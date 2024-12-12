@@ -53,7 +53,7 @@
                 <Property Name="Ename" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Çlşn/bşv.adı" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Username" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Kullanıcı adı" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
             </EntityType>
-            <EntityType Name="Employess" sap:content-version="1">
+            <EntityType Name="Employes" sap:content-version="1">
                 <Key>
                     <PropertyRef Name="Username"/>
                     <PropertyRef Name="RegionCode"/>
@@ -104,11 +104,16 @@
             </EntityType>
             <EntityType Name="Travel" sap:content-version="1">
                 <Key>
+                    <PropertyRef Name="Reinr"/>
                     <PropertyRef Name="GrupSeyahatNo"/>
                 </Key>
                 <Property Name="CreatedAt" Type="Edm.DateTime" Precision="7" sap:unicode="false" sap:label="Yaratma trh." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="TripActivityName" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="40 karakter uzunluğundaki metin" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Talep/seyahat" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Reinr" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Seyahat no." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="StatusText" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="40 karakter uzunluğundaki metin" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Editable" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Boole değişkeni (X= doğru, -= yanlış, boşluk= bilinmiyor)" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Grup" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Boole değişkeni (X= doğru, -= yanlış, boşluk= bilinmiyor)" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TripActivityName" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="40 karakter uzunluğundaki metin" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="LocationEnd" Type="Edm.String" Nullable="false" MaxLength="59" sap:unicode="false" sap:label="Gidilecek yer" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="GrupSeyahatNo" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="GRUP_SEYAHAT_NO" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="CreatedBy" Type="Edm.String" Nullable="false" MaxLength="8" sap:unicode="false" sap:label="Personel no." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
@@ -122,8 +127,8 @@
                 <Property Name="Purpose" Type="Edm.String" Nullable="false" MaxLength="59" sap:unicode="false" sap:label="PURPOSE" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="TripActivity" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="TRIP_ACTIVITY" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Note" Type="Edm.String" Nullable="false" MaxLength="1024" sap:unicode="false" sap:label="Text" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <NavigationProperty Name="TravelItemSet" Relationship="ZHR_PROJ_041_SRV.Travel_To_Item" FromRole="FromRole_Travel_To_Item" ToRole="ToRole_Travel_To_Item"/>
-                <NavigationProperty Name="MessageReturnSet" Relationship="ZHR_PROJ_041_SRV.Travelt_to_Return" FromRole="FromRole_Travelt_to_Return" ToRole="ToRole_Travelt_to_Return"/>
+                <NavigationProperty Name="TRAVELITEMSET" Relationship="ZHR_PROJ_041_SRV.Travel_To_Item" FromRole="FromRole_Travel_To_Item" ToRole="ToRole_Travel_To_Item"/>
+                <NavigationProperty Name="MESSAGERETURNSET" Relationship="ZHR_PROJ_041_SRV.Travelt_to_Return" FromRole="FromRole_Travelt_to_Return" ToRole="ToRole_Travelt_to_Return"/>
             </EntityType>
             <EntityType Name="TravelItem" sap:content-version="1">
                 <Key>
@@ -145,6 +150,7 @@
                 <Property Name="CompanyCode" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Şirket kodu" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="InternalOrderName" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Tanım" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="ControllingArea" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Ayrt.tanımlanmamış alan, muhtemelen yama dzy.kullanılabilir" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="ESTIMATEDCOSTSET" Relationship="ZHR_PROJ_041_SRV.Item_to_Cost" FromRole="FromRole_Item_to_Cost" ToRole="ToRole_Item_to_Cost"/>
             </EntityType>
             <EntityType Name="MessageReturn" sap:content-version="1">
                 <Key>
@@ -172,29 +178,34 @@
                 <Property Name="WorkitemId" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Tanıtıcı" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Grup" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Boole değişkeni (X= doğru, -= yanlış, boşluk= bilinmiyor)" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
             </EntityType>
+            <EntityType Name="EstimatedCost" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Value"/>
+                </Key>
+                <Property Name="Value" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="2" sap:unicode="false" sap:label="Packed integer: 8 bytes, 2 decimal places, leading sign" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Currency" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Para birimi" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="currency-code"/>
+                <Property Name="Kassa" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Nakit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Datvs" Type="Edm.DateTime" Nullable="false" Precision="0" sap:unicode="false" sap:label="Ödeme tarihi" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="UserAuthorization" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Uname"/>
+                </Key>
+                <Property Name="Pernr" Type="Edm.String" Nullable="false" MaxLength="8" sap:unicode="false" sap:label="Personel no." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Uname" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Kullanıcı adı" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="GruopAuth" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Boole değişkeni (X= doğru, -= yanlış, boşluk= bilinmiyor)" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <Association Name="Item_to_Cost" sap:content-version="1">
+                <End Type="ZHR_PROJ_041_SRV.TravelItem" Multiplicity="1" Role="FromRole_Item_to_Cost"/>
+                <End Type="ZHR_PROJ_041_SRV.EstimatedCost" Multiplicity="*" Role="ToRole_Item_to_Cost"/>
+            </Association>
             <Association Name="Travelt_to_Return" sap:content-version="1">
                 <End Type="ZHR_PROJ_041_SRV.Travel" Multiplicity="1" Role="FromRole_Travelt_to_Return"/>
                 <End Type="ZHR_PROJ_041_SRV.MessageReturn" Multiplicity="*" Role="ToRole_Travelt_to_Return"/>
-                <ReferentialConstraint>
-                    <Principal Role="FromRole_Travelt_to_Return">
-                        <PropertyRef Name="GrupSeyahatNo"/>
-                    </Principal>
-                    <Dependent Role="ToRole_Travelt_to_Return">
-                        <PropertyRef Name="Id"/>
-                    </Dependent>
-                </ReferentialConstraint>
             </Association>
             <Association Name="Travel_To_Item" sap:content-version="1">
                 <End Type="ZHR_PROJ_041_SRV.Travel" Multiplicity="1" Role="FromRole_Travel_To_Item"/>
                 <End Type="ZHR_PROJ_041_SRV.TravelItem" Multiplicity="*" Role="ToRole_Travel_To_Item"/>
-                <ReferentialConstraint>
-                    <Principal Role="FromRole_Travel_To_Item">
-                        <PropertyRef Name="GrupSeyahatNo"/>
-                    </Principal>
-                    <Dependent Role="ToRole_Travel_To_Item">
-                        <PropertyRef Name="Pernr"/>
-                    </Dependent>
-                </ReferentialConstraint>
             </Association>
             <EntityContainer Name="ZHR_PROJ_041_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
                 <EntitySet Name="CountriesSet" EntityType="ZHR_PROJ_041_SRV.Countries" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
@@ -203,13 +214,15 @@
                 <EntitySet Name="WbsElementSet" EntityType="ZHR_PROJ_041_SRV.WbsElement" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="TripActivitiesSet" EntityType="ZHR_PROJ_041_SRV.TripActivities" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="PersonalListSet" EntityType="ZHR_PROJ_041_SRV.PersonalList" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
-                <EntitySet Name="EmployessSet" EntityType="ZHR_PROJ_041_SRV.Employess" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="EmployesSet" EntityType="ZHR_PROJ_041_SRV.Employes" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
                 <EntitySet Name="InternalOrdersSet" EntityType="ZHR_PROJ_041_SRV.InternalOrders" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
                 <EntitySet Name="CountryRegionSet" EntityType="ZHR_PROJ_041_SRV.CountryRegion" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
                 <EntitySet Name="TravelSet" EntityType="ZHR_PROJ_041_SRV.Travel" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="TravelItemSet" EntityType="ZHR_PROJ_041_SRV.TravelItem" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="MessageReturnSet" EntityType="ZHR_PROJ_041_SRV.MessageReturn" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="GrupSeyahatKontrolSet" EntityType="ZHR_PROJ_041_SRV.GrupSeyahatKontrol" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="EstimatedCostSet" EntityType="ZHR_PROJ_041_SRV.EstimatedCost" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="UserAuthorizationSet" EntityType="ZHR_PROJ_041_SRV.UserAuthorization" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <AssociationSet Name="Travel_To_ItemSet" Association="ZHR_PROJ_041_SRV.Travel_To_Item" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="TravelSet" Role="FromRole_Travel_To_Item"/>
                     <End EntitySet="TravelItemSet" Role="ToRole_Travel_To_Item"/>
@@ -217,6 +230,10 @@
                 <AssociationSet Name="Travelt_to_ReturnSet" Association="ZHR_PROJ_041_SRV.Travelt_to_Return" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="TravelSet" Role="FromRole_Travelt_to_Return"/>
                     <End EntitySet="MessageReturnSet" Role="ToRole_Travelt_to_Return"/>
+                </AssociationSet>
+                <AssociationSet Name="Item_to_CostSet" Association="ZHR_PROJ_041_SRV.Item_to_Cost" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="TravelItemSet" Role="FromRole_Item_to_Cost"/>
+                    <End EntitySet="EstimatedCostSet" Role="ToRole_Item_to_Cost"/>
                 </AssociationSet>
                 <FunctionImport Name="CountryRegion" ReturnType="ZHR_PROJ_041_SRV.CountryRegion" EntitySet="CountryRegionSet" m:HttpMethod="GET">
                     <Parameter Name="Region" Type="Edm.String" Mode="In" MaxLength="5"/>

@@ -1,216 +1,183 @@
-<mvc:View controllerName="com.hayat.grupseyahat.grupseyahattalebi.controller.Detail"
-	xmlns:mvc="sap.ui.core.mvc"
-	xmlns="sap.m"
-	xmlns:form="sap.ui.layout.form"
-	xmlns:c="sap.ui.core" displayBlock="true" height="100%" busyIndicatorDelay="0">
-	<Page floatingFooter="true">
-		<headerContent>
-			<Button icon="sap-icon://full-screen" id="enterFullScreen" visible="{= !${device>/system/phone} &amp;&amp; !${appView>/actionButtonsInfo/midColumn/fullScreen}}" press="toggleFullScreen" />
-			<Button icon="sap-icon://exit-full-screen" id="exitFullScreen" visible="{= !${device>/system/phone} &amp;&amp; ${appView>/actionButtonsInfo/midColumn/fullScreen}}" press="toggleFullScreen" />
-			<Button icon="sap-icon://decline" id="closeColumn" press=".onCloseDetailPress" />
-		</headerContent>
-		<content>
-			<Panel headerText="{i18n>travelDetail}">
-				<form:Form>
-					<form:layout>
-						<form:ResponsiveGridLayout adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" columnsXL="1" columnsL="1" singleContainerFullSize="false" />
-					</form:layout>
-					<form:formContainers>
-						<form:FormContainer>
-							<form:formElements>
-								<form:FormElement label="{i18n>reason}">
-									<form:fields>
-										<Text text="{Header>/Purpose}" />
-									</form:fields>
-								</form:FormElement>
-								<form:FormElement label="{i18n>purpose}">
-									<form:fields>
-										<Text text="{Header>/TripActivityName}" />
-									</form:fields>
-								</form:FormElement>
-								<form:FormElement label="{i18n>startDate}">
-									<form:fields>
-										<Text text="{
-											path: 'Header>/Departure',
-											type: 'sap.ui.model.type.Date',
-											formatOptions: {
-												pattern: 'dd-MM-YYYY',
-												UTC: true
-											}
-										}" />
-									</form:fields>
-								</form:FormElement>
-								<form:FormElement label="{i18n>endDate}">
-									<form:fields>
-										<Text text="{
-											path: 'Header>/Arrival',
-											type: 'sap.ui.model.type.Date',
-											formatOptions: {
-												pattern: 'dd-MM-YYYY',
-												UTC: true
-											}
-										}" />
-									</form:fields>
-								</form:FormElement>
-								<form:FormElement label="{i18n>country}">
-									<form:fields>
-										<Text text="{= ${Header>/CountryCode} ? ${Header>/CountryName} + ' (' + ${Header>/CountryCode} + ')' : ''}" />
-									</form:fields>
-								</form:FormElement>
-								<form:FormElement label="{i18n>region}" visible="{/SeyahatBolgesi}">
-									<form:fields>
-										<Text text="{= ${Header>/RegionCode} ? ${Header>/RegionName} + ' (' + ${Header>/RegionCode} + ')' : ''}" />
-									</form:fields>
-								</form:FormElement>
-								<form:FormElement label="{i18n>reasonText}" visible="{/SeyahatBolgesi}">
-									<form:fields>
-										<TextArea value="{Header>/Note}" editable="false" />
-									</form:fields>
-								</form:FormElement>
-								<form:FormElement label="{i18n>place}">
-									<form:fields>
-										<Text text="{Header>/LocationEnd}" />
-									</form:fields>
-								</form:FormElement>
-							</form:formElements>
-						</form:FormContainer>
-					</form:formContainers>
-				</form:Form>
-			</Panel>
-			<Panel headerText="{i18n>USERLIST}" visible="{/UserList}">
-				<Table  items="{UserCurrentList>/}" updateFinished="onLoad">
+<mvc:View controllerName="com.hayat.grupseyahat.grupseyahattalebi.controller.Detail" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form"
+	xmlns:c="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:s="sap.f.semantic">
+	<s:SemanticPage busy="{appView>/busy}" busyIndicatorDelay="{appView>/delay}" showFooter="{screenModels>/screenEditableVisible/GeneralEditable}">
+		<s:titleExpandedHeading>
+			<Title text="{screenModels>/screenEditableVisible/DetailTitle}" />
+		</s:titleExpandedHeading>
+		<s:titleSnappedHeading>
+			<HBox>
+				<f:Avatar displayShape="Square" src="sap-icon://flight" class="sapUiMediumMarginEnd" />
+				<Title text="{screenModels>/screenEditableVisible/DetailTitle}" />
+			</HBox>
+		</s:titleSnappedHeading>
+		<s:titleSnappedOnMobile>
+			<Title text="{screenModels>/screenEditableVisible/DetailTitle}" />
+		</s:titleSnappedOnMobile>
+		<s:headerContent>
+			<FlexBox wrap="Wrap" fitContainer="true">
+				<f:Avatar displayShape="Square" src="sap-icon://flight" class="sapUiMediumMarginEnd sapUiSmallMarginBottom" />
+				<VBox visible="{= !!+${Header>/GrupSeyahatNo} }" class="sapUiMediumMarginEnd sapUiSmallMarginBottom">
+					<Title text="{i18n>groupTravelNr}" />
+					<ObjectStatus text="{= +${Header>/GrupSeyahatNo} }" class="sapMObjectStatusLarge" />
+				</VBox>
+				<VBox visible="{= !!+${Header>/Reinr} }" class="sapUiMediumMarginEnd sapUiSmallMarginBottom">
+					<Title text="{i18n>travelRequestNr}" />
+					<ObjectStatus text="{= +${Header>/Reinr} }" class="sapMObjectStatusLarge" />
+				</VBox>
+				<VBox visible="{= !!+${Header>/Status} }" class="sapUiMediumMarginEnd sapUiSmallMarginBottom">
+					<Title text="{i18n>requestStatus}" />
+					<ObjectStatus text="{Header>/StatusText}" class="sapMObjectStatusLarge"
+						state="{= ${Header>/Status} === '1' ? 'Warning' : ${Header>/Status} === '2' ? 'Success' : ${Header>/Status} === '3' ? 'Error' : 'None' }" />
+				</VBox>
+			</FlexBox>
+		</s:headerContent>
+		<s:editAction>
+			<s:EditAction enabled="{Header>/Editable}" visible="{= !${screenModels>/screenEditableVisible/GeneralEditable} }" press=".toggleEdit" />
+		</s:editAction>
+		<s:fullScreenAction>
+			<s:FullScreenAction press=".toggleFullScreen"
+				visible="{= !${device>/system/phone} &amp;&amp; !${appView>/actionButtonsInfo/midColumn/fullScreen} &amp;&amp; !${screenModels>/screenEditableVisible/GeneralEditable} }" />
+		</s:fullScreenAction>
+		<s:exitFullScreenAction>
+			<s:ExitFullScreenAction press=".toggleFullScreen"
+				visible="{= !${device>/system/phone} &amp;&amp; ${appView>/actionButtonsInfo/midColumn/fullScreen} &amp;&amp; !${screenModels>/screenEditableVisible/GeneralEditable} }" />
+		</s:exitFullScreenAction>
+		<s:closeAction>
+			<s:CloseAction press=".onCloseDetailPress" />
+		</s:closeAction>
+		<s:messagesIndicator>
+			<s:MessagesIndicator id="idMessagePopover" press=".onMessageButtonPress" />
+		</s:messagesIndicator>
+		<s:footerMainAction>
+			<s:FooterMainAction text="{i18n>SAVE}" press=".onSaveCreateTravel" />
+		</s:footerMainAction>
+		<s:content>
+			<VBox fitContainer="true" class="sapFSemanticPageAlignContent">
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="0">
+					<!-- seyahat ayrıntıları -->
+					<form:SimpleForm title="{i18n>travelDetail}" layout="ResponsiveGridLayout" editable="true" emptySpanXL="6" emptySpanL="6" emptySpanM="4">
+						<Label text="{i18n>reason}" />
+						<Input value="{Header>/Purpose}" editable="{screenModels>/screenEditableVisible/GeneralEditable}" id="idPurpose" />
+						<Label text="{i18n>purpose}" />
+						<ComboBox items="{ path:'/TripActivitiesSet', templateShareable:true, length:1000 }" selectedKey="{Header>/TripActivity}"
+							editable="{screenModels>/screenEditableVisible/GeneralEditable}" id="idTripActivity">
+							<c:ListItem key="{Id}" text="{Description}" />
+						</ComboBox>
+						<Label text="{i18n>startDate}" />
+						<DatePicker dateValue="{Header>/Departure}" editable="{screenModels>/screenEditableVisible/GeneralEditable}" id="idDeparture" />
+						<Label text="{i18n>endDate}" />
+						<DatePicker dateValue="{Header>/Arrival}" editable="{screenModels>/screenEditableVisible/GeneralEditable}" id="idArrival" />
+						<Label text="{i18n>country}" />
+						<Input value="{= ${Header>/CountryCode} ? ${Header>/CountryName} + ' (' + ${Header>/CountryCode} + ')' : ''}" valueHelpOnly="true" showValueHelp="true"
+							valueHelpRequest=".onValueHelpGeneral($event,'country')" editable="{screenModels>/screenEditableVisible/GeneralEditable}" id="idCountryCode" />
+						<!-- <Label text="{i18n>region}" visible="{/SeyahatBolgesi}" /> -->
+						<Label text="{i18n>region}" />
+						<Input value="{= ${Header>/RegionCode} ? ${Header>/RegionName} + ' (' + ${Header>/RegionCode} + ')' : ''}" valueHelpOnly="true" showValueHelp="true"
+							valueHelpRequest=".onValueHelpGeneral($event, 'region', ${Header>/CountryCode})" editable="{screenModels>/screenEditableVisible/GeneralEditable}"
+							id="idRegionCode" />
+						<Label text="{i18n>place}" />
+						<Input value="{Header>/LocationEnd}" editable="{screenModels>/screenEditableVisible/GeneralEditable}" maxLength="59" />
+						<!-- <Label text="{i18n>reasonText}" visible="{/SeyahatBolgesi}" /> -->
+						<Label text="{i18n>reasonText}" />
+						<TextArea value="{Header>/Note}" editable="{screenModels>/screenEditableVisible/GeneralEditable}" rows="3" maxLength="1024" showExceededText="true"
+							id="idNote" />
+					</form:SimpleForm>
+
+					<!-- avans girişi -->
+					<Table visible="{= !${screenModels>/isGroupTravel} }" fixedLayout="true" items="{EstimatedCostList>/}" mode="MultiSelect" id="idEstimatedCostList"
+						class="sapUiMediumMarginTop">
+						<headerToolbar>
+							<OverflowToolbar>
+								<Title text="{i18n>ESTIMATEDCOSTLIST}" />
+								<ToolbarSpacer />
+								<Button icon="sap-icon://add" text="{i18n>ROWADD}" press=".onAddRow('EstimatedCostList', '/estimatedCost')"
+									enabled="{screenModels>/screenEditableVisible/GeneralEditable}" />
+								<Button icon="sap-icon://delete" text="{i18n>ROWDEL}" press=".onDeleteRow('EstimatedCostList', 'idEstimatedCostList')"
+									enabled="{screenModels>/screenEditableVisible/GeneralEditable}" />
+							</OverflowToolbar>
+						</headerToolbar>
+						<columns>
+							<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>AMOUNT}" /></Column>
+							<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>CURRENCY}" /></Column>
+							<Column demandPopin="true" minScreenWidth="Tablet" hAlign="Center"><Text text="{i18n>KASSA}" /></Column>
+						</columns>
+						<ColumnListItem>
+							<Input value="{ path:'EstimatedCostList>Value', type:'sap.ui.model.type.Float', formatOptions:{ decimals:2 } }" textAlign="End" />
+							<ComboBox selectedKey="{EstimatedCostList>Currency}">
+								<c:ListItem key="TRY" text="TRY" />
+								<c:ListItem key="USD" text="USD" />
+								<c:ListItem key="EUR" text="EUR" />
+							</ComboBox>
+							<CheckBox selected="{EstimatedCostList>Kassa}" />
+						</ColumnListItem>
+					</Table>
+				</l:Grid>
+
+				<!-- mevcut liste -->
+				<Table visible="{= !!${UserCurrentList>/}.length }" fixedLayout="false" items="{UserCurrentList>/}" headerText="{i18n>USERCURLIST}" class="sapUiTinyMarginTop">
+					<columns>
+						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>PERSONNEL}" /></Column>
+						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>TITLE}" /></Column>
+						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>COSTCENTER}" /></Column>
+						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>INTERNALORDER}" /></Column>
+						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>WBSELEMENT}" /></Column>
+					</columns>
+					<ColumnListItem>
+						<ObjectIdentifier title="{UserCurrentList>Pernr}" text="{UserCurrentList>FirstName} {UserCurrentList>LastName}" />
+						<ObjectIdentifier title="{UserCurrentList>Plans}" text="{UserCurrentList>PlansText}" />
+						<ObjectIdentifier title="{UserCurrentList>CostCenter}" text="{UserCurrentList>CostCenterName}" />
+						<ObjectIdentifier title="{UserCurrentList>InternalOrder}" text="{UserCurrentList>InternalOrderName}" />
+						<ObjectIdentifier title="{UserCurrentList>WbsElement}" text="{UserCurrentList>WbsElementName}" />
+					</ColumnListItem>
+				</Table>
+
+				<!-- seyahat edecekler listesi -->
+				<Table fixedLayout="false" items="{UserList>/}" mode="MultiSelect" id="idUserList" class="sapUiMediumMarginTop sapUiMediumMarginBottom">
 					<headerToolbar>
 						<OverflowToolbar>
-							<content>
-								<Title text="{i18n>USERCURLIST}" level="H2" />
-							</content>
+							<Title text="{i18n>USERLIST}" />
+							<ToolbarSpacer />
+							<Button icon="sap-icon://add" text="{i18n>ROWADD}" press=".onAddRow('UserList', '/travelItem')" visible="{screenModels>/isGroupTravel}"
+								enabled="{screenModels>/screenEditableVisible/GeneralEditable}" />
+							<Button icon="sap-icon://delete" text="{i18n>ROWDEL}" press=".onDeleteRow('UserList', 'idUserList')" visible="{screenModels>/isGroupTravel}"
+								enabled="{screenModels>/screenEditableVisible/GeneralEditable}" />
 						</OverflowToolbar>
 					</headerToolbar>
 					<columns>
-						<Column demandPopin="true" minScreenWidth="Tablet">
-							<Text text="{i18n>PERNR}" />
-						</Column>
-						<Column demandPopin="true" minScreenWidth="Tablet">
-							<Text text="{i18n>ENAME}" />
-						</Column>
-						<Column demandPopin="true" minScreenWidth="Tablet">
-							<Text text="{i18n>TITLE}" />
-						</Column>
-						<Column demandPopin="true" minScreenWidth="Tablet">
-							<Text text="{i18n>COSTCENTER}" />
-						</Column>
-						<Column demandPopin="true" minScreenWidth="Tablet">
-							<Text text="{i18n>INTERNALORDER}" />
-						</Column>
-						<Column demandPopin="true" minScreenWidth="Tablet">
-							<Text text="{i18n>WBSELEMENT}" />
-						</Column>
+						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>PERSONNEL}" /></Column>
+						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>TITLE}" /></Column>
+						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>COSTCENTER}" /></Column>
+						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>INTERNALORDER}" /></Column>
+						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>WBSELEMENT}" /></Column>
 					</columns>
-					<items>
-						<ColumnListItem>
-							<cells>
-								<Text text="{UserCurrentList>Pernr}" />
-								<Text text="{UserCurrentList>FirstName} {UserCurrentList>LastName}" />
-								<Text text="{UserCurrentList>PlansText}" />
-								<VBox>
-									<HBox>
-										<Text text="{UserCurrentList>CostCenter}" />
-									</HBox>
-									<HBox>
-										<Text text="{UserCurrentList>CostCenterName}" />
-									</HBox>
-								</VBox>
-								<VBox>
-									<HBox>
-										<Text text="{UserCurrentList>InternalOrder}" />
-									</HBox>
-									<HBox>
-										<Text text="{UserCurrentList>InternalOrderName}" />
-									</HBox>
-								</VBox>
-								<VBox>
-									<HBox>
-										<Text text="{UserCurrentList>WbsElement}"/>
-									</HBox>
-									<HBox>
-										<Text text="{UserCurrentList>WbsElementName}" />
-									</HBox>
-								</VBox>
-							</cells>
-						</ColumnListItem>
-					</items>
+					<ColumnListItem>
+						<VBox>
+							<Input value="{UserList>Pernr}" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onUserSearchHelp"
+								editable="{= ${screenModels>/screenEditableVisible/GeneralEditable} &amp;&amp; ${screenModels>/isGroupTravel} }" />
+							<Label design="Bold" text="{UserList>FirstName} {UserList>LastName}" class="sapUiTinyMarginTop" />
+						</VBox>
+						<VBox>
+							<Input value="{UserList>Plans}" editable="false" />
+							<Label design="Bold" text="{UserList>PlansText}" class="sapUiTinyMarginTop" />
+						</VBox>
+						<VBox>
+							<Input value="{UserList>CostCenter}" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpGeneral($event,'costcenter')"
+								editable="{= ${screenModels>/screenEditableVisible/GeneralEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" />
+							<Label design="Bold" text="{UserList>CostCenterName}" class="sapUiTinyMarginTop" />
+						</VBox>
+						<VBox>
+							<Input value="{UserList>InternalOrder}" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpGeneral($event,'internalorder')"
+								editable="{= ${screenModels>/screenEditableVisible/GeneralEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" />
+							<Label design="Bold" text="{UserList>InternalOrderName}" class="sapUiTinyMarginTop" />
+						</VBox>
+						<VBox>
+							<Input value="{UserList>WbsElement}" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpGeneral($event,'wbselement')"
+								editable="{= ${screenModels>/screenEditableVisible/GeneralEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" />
+							<Label design="Bold" text="{UserList>WbsElementName}" class="sapUiTinyMarginTop" />
+						</VBox>
+					</ColumnListItem>
 				</Table>
-				<Table id="idUserScreenList" items="{UserList>/}" mode="MultiSelect" updateFinished="onLoad">
-					<headerToolbar>
-						<OverflowToolbar>
-							<content>
-								<Title text="{i18n>USERLIST}" level="H2" />
-								<Button icon="sap-icon://add" text="{i18n>ROWADD}" press="onAddRow" enabled="{Header>/Editable}"/>
-								<Button icon="sap-icon://delete" text="{i18n>ROWDEL}" press="onDeleteRow" enabled="{Header>/Editable}"/>
-							</content>
-						</OverflowToolbar>
-					</headerToolbar>
-					<columns>
-						<Column demandPopin="true" minScreenWidth="Tablet">
-							<Text text="{i18n>PERNR}" />
-						</Column>
-						<Column demandPopin="true" minScreenWidth="Tablet">
-							<Text text="{i18n>ENAME}" />
-						</Column>
-						<Column demandPopin="true" minScreenWidth="Tablet">
-							<Text text="{i18n>TITLE}" />
-						</Column>
-						<Column demandPopin="true" minScreenWidth="Tablet">
-							<Text text="{i18n>COSTCENTER}" />
-						</Column>
-						<Column demandPopin="true" minScreenWidth="Tablet">
-							<Text text="{i18n>INTERNALORDER}" />
-						</Column>
-						<Column demandPopin="true" minScreenWidth="Tablet">
-							<Text text="{i18n>WBSELEMENT}" />
-						</Column>
-					</columns>
-					<items>
-						<ColumnListItem>
-							<cells>
-								<Input value="{UserList>Pernr}" maxLength="8" showValueHelp="true" valueHelpOnly="true" valueHelpRequest="onUserSearchHelp" />
-								<Text text="{UserList>FirstName} {UserList>LastName}" />
-								<Text text="{UserList>PlansText}" />
-								<VBox>
-									<HBox>
-										<Text text="{UserList>CostCenter}" />
-									</HBox>
-									<HBox>
-										<Text text="{UserList>CostCenterName}" />
-									</HBox>
-								</VBox>
-								<VBox>
-									<HBox>
-										<Text text="{UserList>InternalOrder}" />
-									</HBox>
-									<HBox>
-										<Text text="{UserList>InternalOrderName}" />
-									</HBox>
-								</VBox>
-								<VBox>
-									<HBox>
-										<Input value="{UserList>WbsElement}" valueHelpOnly="true" showValueHelp="true" required="true" valueHelpRequest="onValueHelpGeneral($event,'wbselement','')" />
-									</HBox>
-									<HBox>
-										<Text text="{UserList>WbsElementName}" />
-									</HBox>
-								</VBox>
-							</cells>
-						</ColumnListItem>
-					</items>
-				</Table>
-			</Panel>
-		</content>
-		<footer>
-			<OverflowToolbar>
-				<ToolbarSpacer />
-				<Button text="{i18n>SAVE}" icon="sap-icon://save" press="onSaveCreateTravel" enabled="{Header>/Editable}"/>
-			</OverflowToolbar>
-		</footer>
-	</Page>
+			</VBox>
+		</s:content>
+	</s:SemanticPage>
 </mvc:View>

@@ -6,31 +6,29 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/m/MessageBox",
     "sap/ui/Device"
-], function (
-    Controller,
-    JSONModel,
-    Fragment,
-    FilterOperator,
-    Filter,
-    MessageBox,
-    Device
-) {
+], function (Controller, JSONModel, Fragment, FilterOperator, Filter, MessageBox, Device) {
     "use strict";
+
     var _oGlobalBusyDialog = new sap.m.BusyDialog();
+
     return Controller.extend("com.hayat.grupseyahat.grupseyahattalebi.controller.BaseController", {
 
         getModel: function (sName) {
             return this.getView().getModel(sName);
         },
+
         setModel: function (oModel, sName) {
             return this.getView().setModel(oModel, sName);
         },
+
         getRouter: function () {
             return this.getOwnerComponent().getRouter();
         },
+
         getResourceBundle: function () {
             return this.getOwnerComponent().getModel("i18n").getResourceBundle();
         },
+
         _sendQueryData: function (sPath, aFilters) {
             return new Promise((fnSuccess, fnReject) => {
                 const oParameters = {
@@ -42,16 +40,19 @@ sap.ui.define([
                 this.oDataModel.read(sPath, oParameters);
             });
         },
-        _sendReadData: function (sPath) {
+
+        _sendReadData: function (sPath, mUrlParameters) {
             return new Promise((fnSuccess, fnReject) => {
                 const oParameters = {
                     success: fnSuccess,
-                    error: fnReject
+                    error: fnReject,
+                    urlParameters: mUrlParameters
                 };
 
                 this.oDataModel.read(sPath, oParameters);
             });
         },
+
         _sendUpdateData: function (sPath, oDeepData) {
             return new Promise((fnSuccess, fnReject) => {
                 const oParameters = {
@@ -63,6 +64,7 @@ sap.ui.define([
                 this.oDataModel.update(sPath, oDeepData, oParameters);
             });
         },
+
         _sendCreateData: function (sPath, oDeepData, oHeaders) {
             return new Promise((fnSuccess, fnReject) => {
                 const oParameters = {
@@ -73,6 +75,7 @@ sap.ui.define([
                 this.oDataModel.create(sPath, oDeepData, oParameters);
             });
         },
+
         _callFunction: function (sPath, sMethodName, oUrlParameters) {
             return new Promise((fnResolve, fnReject) => {
                 let oParams = {
@@ -83,36 +86,73 @@ sap.ui.define([
                 };
 
                 this.oDataModel.callFunction(sPath, oParams);
-
             });
         },
-        _showServiceError: function (e) {
-            if (e.responseText) {
-                try {
-                    var eObj = JSON.parse(e.responseText);
-                    if (eObj.error) {
-                        MessageBox.error(eObj.error.message.value, {
-                            actions: [sMessageBox.Action.OK]
-                        });
-                    }
-                } catch (err) {
-                    MessageBox.error(e.responseText, {
-                        actions: [MessageBox.Action.OK]
-                    });
-                }
-            } else {
-                MessageBox.error(this._getText("GENERALERROROR"), {
-                    actions: [MessageBox.Action.OK]
-                });
-            }
-        },
+
         _getText: function (sText) {
             return this.getView().getModel("i18n").getResourceBundle().getText(sText);
         },
+
         _getJsonData: function (sModel) {
-            return jQuery.extend(true,
-                {}, this.getOwnerComponent().getModel("screenModels").getProperty(sModel));
+            return jQuery.extend(true, {}, this.getOwnerComponent().getModel("screenModels").getProperty(sModel));
         },
+
+        _valueHelpGeneral: async function (oEvent, sType, sFilterParam) {
+            var sModel = "",
+                aFilter = [],
+                sDialogId = "",
+                sTitle = "";
+
+            switch (sType) {
+                case "country":
+                    sModel = "/CountriesSet"
+                    sDialogId = "idCountrySH";
+                    sTitle = this._getText("countrySHTitle");
+                    break;
+
+                case "region":
+                    sModel = "/RegionSet"
+                    sDialogId = "idRegionSH";
+                    sTitle = this._getText("regionSHTitle");
+                    aFilter.push(new Filter("CountryID", FilterOperator.EQ, sFilterParam))
+                    break;
+
+                case "costcenter":
+                    this._sPath = oEvent.getSource().getBindingContext("UserList").getPath();
+                    sModel = "/CostCenterSet";
+                    sDialogId = "idCostCenterSH";
+                    sTitle = this._getText("costCenterSHTitle");
+                    break;
+
+                case "internalorder":
+                    this._sPath = oEvent.getSource().getBindingContext("UserList").getPath();
+                    sModel = "/InternalOrdersSet";
+                    sDialogId = "idInternalOrderSH";
+                    sTitle = this._getText("internalOrderSHTitle");
+                    break;
+
+                case "wbselement":
+                    this._sPath = oEvent.getSource().getBindingContext("UserList").getPath();
+                    sModel = "/WbsElementSet";
+                    sDialogId = "idWbsElementSH";
+                    sTitle = this._getText("wbsElementSHTitle");
+                    break;
+            }
+
+            _oGlobalBusyDialog.open();
+
+            try {
+                let oResponse = await this._sendQueryData(sModel, aFilter);
+                if (oResponse.results) {
+                    this.openDialogSH(sDialogId, oResponse.results, sTitle, sType)
+                }
+
+            } finally {
+                _oGlobalBusyDialog.close();
+            }
+
+        },
+
         openDialog: function (sDialogId, sFragmentName) {
             return new Promise((fnResolve, fnReject) => {
                 var oView = this.getView(),
@@ -134,6 +174,7 @@ sap.ui.define([
                 }
             });
         },
+
         openDialogSH: function (sDialogId, oModel, sTitle, sType) {
             return new Promise((fnResolve, fnReject) => {
                 var oView = this.getView(),
@@ -168,6 +209,7 @@ sap.ui.define([
         closeDialogSH: function (oEvent) {
             this._isSourceInFragment(oEvent.getSource()).destroy();
         },
+
         searchDialogSH: function (oEvent) {
             var sValue = oEvent.getParameter("value"),
                 oFilters = new Filter({
@@ -176,6 +218,7 @@ sap.ui.define([
                     and: false,
                 }),
                 oBinding = oEvent.getParameter("itemsBinding");
+
             if (!!sValue === true) {
                 oFilters.aFilters.push(new Filter("Id", FilterOperator.Contains, sValue)),
                     oFilters.aFilters.push(new Filter("Name", FilterOperator.Contains, sValue));
@@ -185,31 +228,69 @@ sap.ui.define([
                 oBinding.filter([]);
             }
         },
-        confirmSHDialog: function (oEvent) {
-            var sKey = oEvent.getParameter("selectedItem").getTitle(),
-                sText = oEvent.getParameter("selectedItem").getDescription(),
-                sType = oEvent.getSource().getModel().getProperty("/shType");
+
+        confirmSHDialog: async function (oEvent) {
+            let oSource = oEvent.getSource(),
+                oSelectedItem = oEvent.getParameter("selectedItem");
+
+            let sKey = oSelectedItem.getTitle(),
+                sText = oSelectedItem.getDescription(),
+                sType = oSource.getModel().getProperty("/shType");
+
+            let oHeaderModel = this.getView().getModel("Header"),
+                oUserListModel = this.getView().getModel("UserList");
+
             switch (sType) {
-                case 'country':
-                    this.getView().getModel("Header").setProperty("/CountryCode", sKey)
-                    this.getView().getModel("Header").setProperty("/CountryName", sText)
+                case "country":
+                    oHeaderModel.setProperty("/CountryCode", sKey)
+                    oHeaderModel.setProperty("/CountryName", sText)
                     this.getView().getModel().setProperty("/SeyahatBolgesi", true)
                     break;
-                case 'region':
-                    this.getView().getModel("Header").setProperty("/RegionCode", sKey)
-                    this.getView().getModel("Header").setProperty("/RegionName", sText)
-                    this.getView().getModel().setProperty("/UserList", true)
+
+                case "region":
+                    oHeaderModel.setProperty("/RegionCode", sKey)
+                    oHeaderModel.setProperty("/RegionName", sText)
+
+                    if (!oHeaderModel.getProperty("/Grup")) {
+                        let oUserDetail = this.getView().getModel("UserList").getProperty("/0"),
+                            oEmployeeDefaults = await this._getEmployeeDefaults();
+
+                        oUserDetail.Pernr = oEmployeeDefaults.Pernr;
+                        oUserDetail.FirstName = oEmployeeDefaults.FirstName;
+                        oUserDetail.LastName = oEmployeeDefaults.LastName;
+                        oUserDetail.Plans = oEmployeeDefaults.Plans;
+                        oUserDetail.PlansText = oEmployeeDefaults.PlansText;
+                        oUserDetail.CostCenter = oEmployeeDefaults.CostCenter;
+                        oUserDetail.CostCenterName = oEmployeeDefaults.CostCenterName;
+                        oUserDetail.InternalOrder = oEmployeeDefaults.InternalOrder;
+                        oUserDetail.InternalOrderName = oEmployeeDefaults.InternalOrderName;
+                    }
+
                     break;
-                case 'wbselement':
-                    this.getView().getModel("UserList").setProperty(this._sPath + "/WbsElement", sKey)
-                    this.getView().getModel("UserList").setProperty(this._sPath + "/WbsElementName", sText)
-                    this.getView().getModel("UserList").refresh(true);
+
+                case "costcenter":
+                    oUserListModel.setProperty(this._sPath + "/CostCenter", sKey)
+                    oUserListModel.setProperty(this._sPath + "/CostCenterName", sText)
+                    oUserListModel.refresh(true);
+                    break;
+
+                case "internalorder":
+                    oUserListModel.setProperty(this._sPath + "/InternalOrder", sKey)
+                    oUserListModel.setProperty(this._sPath + "/InternalOrderName", sText)
+                    oUserListModel.refresh(true);
+                    break;
+
+                case "wbselement":
+                    oUserListModel.setProperty(this._sPath + "/WbsElement", sKey)
+                    oUserListModel.setProperty(this._sPath + "/WbsElementName", sText)
+                    oUserListModel.refresh(true);
                     break;
             }
-            oEvent.getSource().destroy();
-        },
-        _isSourceInFragment: function (oControl) {
 
+            oSource.destroy();
+        },
+
+        _isSourceInFragment: function (oControl) {
             while (oControl) {
                 if (oControl instanceof sap.m.Dialog || oControl instanceof sap.m.SelectDialog) {
                     return oControl;
@@ -217,19 +298,23 @@ sap.ui.define([
                 oControl = oControl.getParent();
             }
         },
+
         onSearchPers: async function (oEvent) {
             var oList = oEvent.getSource().getParent().getParent().getContent()[1],
                 _oListTemplate = oList.getBindingInfo("items").template;
+
             let sText = oEvent.getSource().getValue().trim();
             let aFilter = [];
+
             if (isNaN(parseInt(sText))) {
-                aFilter.push(new sap.ui.model.Filter("Ename", sap.ui.model.FilterOperator.EQ, sText));
+                aFilter.push(new Filter("Ename", FilterOperator.EQ, sText));
+            } else {
+                aFilter.push(new Filter("Pernr", FilterOperator.EQ, sText));
             }
-            else {
-                aFilter.push(new sap.ui.model.Filter("Pernr", sap.ui.model.FilterOperator.EQ, sText));
-            }
+
             try {
                 let oResponse = await this._sendQueryData("/PersonalListSet", aFilter);
+
                 oList.unbindAggregation("items");
                 oList.setModel(new sap.ui.model.json.JSONModel(oResponse.results));
                 oList.bindAggregation("items", {
@@ -237,63 +322,74 @@ sap.ui.define([
                     template: _oListTemplate,
                     templateShareable: true
                 });
-            } catch (error) {
-                this._showServiceError(error);
+
             } finally {
                 _oGlobalBusyDialog.close();
             }
         },
+
         onPersValueConfirm: async function (oEvent) {
             var oList = oEvent.getSource().getParent().getContent()[1],
                 oDialog = oEvent.getSource().getParent();
+
             if (!oList.getSelectedContextPaths()[0]) {
                 sap.m.MessageToast.show(this._getText("pleaseSelectPernr"));
                 return;
             }
-            debugger;
+
             let sUsername = oList.getModel().getObject(oList.getSelectedContextPaths()[0]).Username,
                 sRegionCode = this.getView().getModel("Header").getProperty("/RegionCode");
+
+            let oModel = this.getModel(),
+                sEmployeePath = oModel.createKey("/EmployeeSet", {
+                    Username: sUsername,
+                    RegionCode: sRegionCode
+                });
+
             oDialog.close();
             _oGlobalBusyDialog.open();
+
             try {
-                let oResponse = await this._sendReadData("/EmployessSet(Username='" + sUsername + "',RegionCode='" + sRegionCode + "')"),
+                let oResponse = await this._sendReadData(sEmployeePath),
                     oRowModel = this.getView().getModel("UserList").getProperty(this._sPath);
+
                 for (var i in oRowModel) {
-                    oRowModel[i] = oResponse[i]
+                    oRowModel[i] = oResponse[i];
                 }
 
-                this.getView().getModel("UserList").setProperty(this._sPath, oRowModel)
-                debugger;
-            } catch (error) {
-                this._showServiceError(error);
+                this.getView().getModel("UserList").setProperty(this._sPath, oRowModel);
+
             } finally {
                 _oGlobalBusyDialog.close();
             }
         },
+
         onMessageButtonPress: function (oEvent) {
             var oMessagesButton = oEvent.getSource();
             this._openMessagePopover(oMessagesButton);
-
         },
+
         _checkMessages: function () {
             let oMessageManager = sap.ui.getCore().getMessageManager(),
                 oMessages = oMessageManager.getMessageModel().getData(),
                 aMessageTexts = oMessages.map(oItem => oItem.message);
+
             aMessageTexts = [...new Set(aMessageTexts)];
             if (aMessageTexts.length > 0) {
-                this._waitForButtonRendering().then(function (oMessagesButton) {
+                this._waitForButtonRendering().then((oMessagesButton) => {
                     this._openMessagePopover(oMessagesButton);
-                }.bind(this));
-
+                });
             }
         },
+
         _waitForButtonRendering: function () {
-            return new Promise(function (resolve) {
+            return new Promise((resolve) => {
                 let oMessagesButton = this.byId("idMessagePopover");
 
                 // Eğer butonun DOM referansı varsa, render edilmiş demektir
                 if (oMessagesButton.getDomRef()) {
                     resolve(oMessagesButton);
+
                 } else {
                     // Buton render edildikten sonra resolve
                     oMessagesButton.addEventDelegate({
@@ -302,8 +398,9 @@ sap.ui.define([
                         }
                     });
                 }
-            }.bind(this));
+            });
         },
+
         _removeDuplicateMessages: function () {
             let oMessageManager = sap.ui.getCore().getMessageManager(),
                 oMessages = oMessageManager.getMessageModel().getData(),
@@ -344,124 +441,94 @@ sap.ui.define([
             if (!oMessagesButton) {
                 oMessagesButton = this.byId("idMessagePopover")
             }
+
             oMessagesButton.addDependent(this._oMessagePopover);
-
             this._oMessagePopover.openBy(oMessagesButton);
-
-
         },
 
         resetMessageModel: function () {
             sap.ui.getCore().getMessageManager().removeAllMessages();
         },
-        _addRow: function () {
-            let JSONModel = this._getJsonData("/travelItem");
-            this.getView().getModel("UserList").getData().push(JSONModel);
-            this.getView().getModel("UserList").refresh(true);
+
+        _addRow: function (sModelName, sJSONProperty) {
+            let JSONModel = this._getJsonData(sJSONProperty);
+            this.getView().getModel(sModelName).getData().push(JSONModel);
+            this.getView().getModel(sModelName).refresh(true);
         },
-        _deleteRow: function () {
-            let oTable = this.getView().byId("idUserScreenList"),
+
+        _deleteRow: function (sModelName, sTableId) {
+            let oTable = this.getView().byId(sTableId),
                 aPath = oTable.getSelectedContextPaths(),
                 aPathTmp = aPath.map(line => parseInt(line.substring(1)));
+
             aPathTmp.sort(function (a, b) {
                 return b - a;
             });
+
             aPathTmp.forEach(line => {
                 let path = "/".concat(line),
-                    deleteIndex = parseInt(path.substring(path.lastIndexOf('/') + 1));
-                oTable.getModel("UserList").getData().splice(deleteIndex, 1);
+                    deleteIndex = parseInt(path.substring(path.lastIndexOf("/") + 1));
 
+                oTable.getModel(sModelName).getData().splice(deleteIndex, 1);
             });
-            oTable.getModel("UserList").refresh();
+
+            oTable.getModel(sModelName).refresh();
             oTable.removeSelections(true);
         },
-        _valueHelpGeneral: async function (oEvent, sType, sFilterParam) {
-            var sModel = "",
-                aFilter = [],
-                sDialogId = "",
-                sTitle = "";
-            switch (sType) {
-                case 'country':
-                    sModel = "/CountriesSet"
-                    sDialogId = "idCountrySH";
-                    sTitle = this._getText("countrySHTitle");
-                    break;
-                case 'region':
-                    sModel = "/RegionSet"
-                    sDialogId = "idRegionSH";
-                    sTitle = this._getText("regionSHTitle");
-                    aFilter.push(new sap.ui.model.Filter("CountryID", sap.ui.model.FilterOperator.EQ, sFilterParam))
-                    break;
-                case 'wbselement':
-                    this._sPath = oEvent.getSource().getBindingContext("UserList").getPath();
-                    sModel = "/WbsElementSet";
-                    sDialogId = "idWbsSH";
-                    sTitle = this._getText("wbsElementSHTitle");
-                    break;
-            }
 
-            _oGlobalBusyDialog.open();
-            try {
-                let oResponse = await this._sendQueryData(sModel, aFilter);
-                if (oResponse.results) {
-                    this.openDialogSH(sDialogId, oResponse.results, sTitle, sType)
-                }
-            } catch (e) {
-                this._showServiceError(e);
-            } finally {
-                _oGlobalBusyDialog.close();
-            }
-        },
         _saveCreateTravel: function (bCreate) {
             var oMandatoryFields = this._getJsonData("/mandatoryFieldsCreateTravel"),
                 oHeader = this.getView().getModel("Header").getData(),
-                oItem = this.getView().getModel("UserList").getData(),
-                sValueState,
-                sManErr;
-            if (bCreate) {
+                aItem = this.getView().getModel("UserList").getData(),
+                sValueState = "",
+                bError = false;
 
+            if (bCreate) {
                 for (var i in oMandatoryFields) {
                     if (!!oHeader[i] === false) {
+                        bError = true;
                         sValueState = "Error";
-                        sManErr = "X";
                     } else {
                         sValueState = "None";
                     }
+
                     this.getView().byId(oMandatoryFields[i]).setValueState(sValueState);
                 }
-                if (sManErr === "X") {
-                    sap.m.MessageBox.error(this._getText("MANDFIELDS"));
+
+                if (bError) {
+                    MessageBox.error(this._getText("MANDFIELDS"));
                     return;
                 }
             }
-            if (oItem.length === 0) {
-                sap.m.MessageBox.error(this._getText("MANDPERNR"));
+
+            if (oHeader.Grup && aItem.length === 0) {
+                MessageBox.error(this._getText("MANDPERNR"));
                 return;
             }
-            sap.m.MessageBox.show(
-                this._getText("createTravelTitle"), {
-                icon: sap.m.MessageBox.Icon.INFORMATION,
-                actions: [sap.m.MessageBox.Action.YES, sap.m.MessageBox.Action.NO],
-                onClose: function (oAction) {
-                    if (oAction === sap.m.MessageBox.Action.YES) {
-                        this._postSave();
-                    } else {
-                        return;
+
+            MessageBox.confirm(this._getText("createTravelTitle"), {
+                onClose: (oAction) => {
+                    if (oAction === MessageBox.Action.YES) {
+                        this._postSave(bCreate);
                     }
-                }.bind(this)
-            })
+                }
+            });
         },
+
         _postSave: async function (bCreate) {
             var oDeepData = this.getView().getModel("Header").getData();
-            oDeepData.TravelItemSet = this.getView().getModel("UserList").getData();
+            oDeepData.TRAVELITEMSET = this.getView().getModel("UserList").getData();
+            oDeepData.TRAVELITEMSET.forEach(oTravelItem => { oTravelItem.ESTIMATEDCOSTSET = this.getView().getModel("EstimatedCostList").getData(); });
             oDeepData.MessageReturnSet = [];
+
             _oGlobalBusyDialog.open();
+
             try {
                 let oResponse = await this._sendCreateData("/TravelSet", oDeepData);
                 let oMessageManager = sap.ui.getCore().getMessageManager();
                 var messageTypeMap = {
-                    'E': sap.ui.core.MessageType.Error,
-                    'S': sap.ui.core.MessageType.Success
+                    "E": sap.ui.core.MessageType.Error,
+                    "S": sap.ui.core.MessageType.Success
                 }
                 oResponse.MessageReturnSet.results.forEach(oValues => {
                     var oMessageType = messageTypeMap[oValues.Type] || sap.ui.core.MessageType.None;
@@ -476,18 +543,24 @@ sap.ui.define([
                 });
 
                 var bReplace = !Device.system.phone;
-                this.getRouter().navTo("list", {
-                }, bReplace);
+                this.getRouter().navTo("list", {}, bReplace);
 
-
-
-            } catch (error) {
-                this._showServiceError(error)
             } finally {
                 _oGlobalBusyDialog.close();
             }
-        }
+        },
 
+        _getEmployeeDefaults: function () {
+            let oModel = this.getModel(),
+                oHeaderModel = this.getModel("Header");
+
+            let sPath = oModel.createKey("/EmployeeSet", {
+                Username: "",
+                RegionCode: oHeaderModel.getProperty("/RegionCode")
+            });
+
+            return this._sendReadData(sPath);
+        }
 
     });
 });

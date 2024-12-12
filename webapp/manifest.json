@@ -1,158 +1,165 @@
 {
-  "_version": "1.17.0",
-  "sap.app": {
-    "id": "com.hayat.grupseyahat.grupseyahattalebi",
-    "type": "application",
-    "i18n": "i18n/i18n.properties",
-    "applicationVersion": {
-      "version": "0.0.1"
-    },
-    "title": "{{appTitle}}",
-    "description": "{{appDescription}}",
-    "resources": "resources.json",
-    "sourceTemplate": {
-      "id": "@sap/generator-fiori:basic",
-      "version": "1.15.0",
-      "toolsId": "a4807903-6a54-47ea-babb-2706eb4bd3ca"
-    },
-    "dataSources": {
-      "mainService": {
-        "uri": "/sap/opu/odata/sap/ZHR_PROJ_041_SRV/",
-        "type": "OData",
-        "settings": {
-          "annotations": [],
-          "localUri": "localService/metadata.xml",
-          "odataVersion": "2.0"
-        }
-      },
-      "screenModelsAlias": {
-        "uri": "model/screenModels.json",
-        "type": "JSON"
-      }
-    }
-  },
-  "sap.ui": {
-    "technology": "UI5",
-    "icons": {
-      "icon": "",
-      "favIcon": "",
-      "phone": "",
-      "phone@2": "",
-      "tablet": "",
-      "tablet@2": ""
-    },
-    "deviceTypes": {
-      "desktop": true,
-      "tablet": true,
-      "phone": true
-    }
-  },
-  "sap.ui5": {
-    "flexEnabled": false,
-    "dependencies": {
-      "minUI5Version": "1.71.69",
-      "libs": {
-        "sap.m": {},
-        "sap.ui.core": {}
-      }
-    },
-    "contentDensities": {
-      "compact": true,
-      "cozy": true
-    },
-    "models": {
-      "i18n": {
-        "type": "sap.ui.model.resource.ResourceModel",
-        "settings": {
-          "bundleName": "com.hayat.grupseyahat.grupseyahattalebi.i18n.i18n"
-        }
-      },
-      "": {
-        "dataSource": "mainService",
-        "preload": true,
-        "settings": {
-          "defaultOperationMode": "Client",
-          "defaultCountMode": "None",
-          "useBatch":""
-        }
-      },
-      "screenModels": {
-        "type": "sap.ui.model.json.JSONModel",
-        "dataSource": "screenModelsAlias",
-        "preload": true
-      }
-    },
-    "resources": {
-      "css": [
-        {
-          "uri": "css/style.css"
-        }
-      ]
-    },
-    "routing": {
-      "config": {
-       "routerClass": "sap.m.routing.Router",
-        "viewType": "XML",
-        "viewPath": "com.hayat.grupseyahat.grupseyahattalebi.view",
-        "controlId": "layout",
-        "controlAggregation": "beginColumnPages",
-        "bypassed": {
-          "target": [
-            "notFound"
-          ]
-        },
-        "async": true
-      },
-      "routes": [
-        {
-          "pattern": "",
-          "name": "list",
-          "target": [
-            "list",
-            "object"
-          ]
-        },
-        {
-          "pattern": "Detail/{objectId}",
-          "name": "object",
-          "target": [
-            "list"
-          ]
-        },
-        {
-          "pattern": "CreateTravel",
-          "name": "CreateTravel",
-          "target": [
-            "CreateTravel"
-          ]
-        }
-      ],
-      "targets": {
-        "list": {
-          "viewName": "List",
-          "viewId": "list"
-        },
-        "object": {
-          "viewName": "Detail",
-          "viewId": "detail",
-          "viewLevel": 1,
-          "controlAggregation": "midColumnPages"
-        },
-        "CreateTravel": {
-          "viewName": "CreateTravel",
-          "viewId": "CreateTravel"
-        },
-        "notFound": {
-          "viewName": "NotFound",
-          "viewId": "notFound"
-        }
-      }
-    },
-    "rootView": {
-      "viewName": "com.hayat.grupseyahat.grupseyahattalebi.view.App",
-      "type": "XML",
-      "async": true,
-      "id": "app"
-    }
-  }
+	"_version": "1.17.0",
+	"sap.app": {
+		"id": "com.hayat.grupseyahat.grupseyahattalebi",
+		"type": "application",
+		"i18n": "i18n/i18n.properties",
+		"applicationVersion": {
+			"version": "0.0.1"
+		},
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}",
+		"resources": "resources.json",
+		"sourceTemplate": {
+			"id": "@sap/generator-fiori:basic",
+			"version": "1.15.0",
+			"toolsId": "a4807903-6a54-47ea-babb-2706eb4bd3ca"
+		},
+		"dataSources": {
+			"mainService": {
+				"uri": "/sap/opu/odata/sap/ZHR_PROJ_041_SRV/",
+				"type": "OData",
+				"settings": {
+					"annotations": [],
+					"localUri": "localService/metadata.xml",
+					"odataVersion": "2.0"
+				}
+			},
+			"screenModelsAlias": {
+				"uri": "model/screenModels.json",
+				"type": "JSON"
+			}
+		}
+	},
+	"sap.ui": {
+		"fullWidth": true,
+		"technology": "UI5",
+		"icons": {
+			"icon": "",
+			"favIcon": "",
+			"phone": "",
+			"phone@2": "",
+			"tablet": "",
+			"tablet@2": ""
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		}
+	},
+	"sap.ui5": {
+		"flexEnabled": false,
+		"dependencies": {
+			"minUI5Version": "1.71.69",
+			"libs": {
+				"sap.f": {},
+				"sap.m": {},
+				"sap.ui.core": {},
+				"sap.ui.layout": {},
+				"sap.ui.table": {}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "com.hayat.grupseyahat.grupseyahattalebi.i18n.i18n"
+				}
+			},
+			"": {
+				"dataSource": "mainService",
+				"preload": true,
+				"settings": {
+					"defaultOperationMode": "Client",
+					"defaultCountMode": "None",
+					"useBatch": true
+				}
+			},
+			"screenModels": {
+				"type": "sap.ui.model.json.JSONModel",
+				"dataSource": "screenModelsAlias",
+				"preload": true
+			}
+		},
+		"resources": {
+			"css": [
+				{
+					"uri": "css/style.css"
+				}
+			]
+		},
+		"routing": {
+			"config": {
+				"routerClass": "sap.m.routing.Router",
+				"viewType": "XML",
+				"viewPath": "com.hayat.grupseyahat.grupseyahattalebi.view",
+				"controlId": "layout",
+				"controlAggregation": "beginColumnPages",
+				"bypassed": {
+					"target": [
+						"notFound"
+					]
+				},
+				"async": true
+			},
+			"routes": [
+				{
+					"pattern": "",
+					"name": "list",
+					"target": [
+						"list"
+					]
+				},
+				{
+					"pattern": "Detail/{Reinr}/{GrupSeyahatNo}",
+					"name": "detail",
+					"target": [
+						"list",
+						"detail"
+					]
+				},
+				{
+					"pattern": "CreateTravel",
+					"name": "createTravel",
+					"target": [
+						"list",
+						"detail"
+					]
+				}
+			],
+			"targets": {
+				"list": {
+					"viewName": "List",
+					"viewId": "list",
+					"controlAggregation": "beginColumnPages"
+				},
+				"detail": {
+					"viewName": "Detail",
+					"viewId": "detail",
+					"controlAggregation": "midColumnPages"
+				},
+				"createTravel": {
+					"viewName": "Detail",
+					"viewId": "detail",
+					"controlAggregation": "midColumnPages"
+				},
+				"notFound": {
+					"viewName": "NotFound",
+					"viewId": "notFound",
+					"controlAggregation": "midColumnPages"
+				}
+			}
+		},
+		"rootView": {
+			"viewName": "com.hayat.grupseyahat.grupseyahattalebi.view.App",
+			"type": "XML",
+			"async": true,
+			"id": "app"
+		}
+	}
 }

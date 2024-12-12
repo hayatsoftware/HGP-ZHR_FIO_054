@@ -4,15 +4,11 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/Device",
-], function (
-    BaseController,
-    JSONModel,
-    Filter,
-    FilterOperator,
-    Device,
-) {
+], function (BaseController, JSONModel, Filter, FilterOperator, Device) {
     "use strict";
+
     var _oGlobalBusyDialog = new sap.m.BusyDialog();
+
     return BaseController.extend("com.hayat.grupseyahat.grupseyahattalebi.controller.List", {
         /**
          * @override
@@ -45,20 +41,12 @@ sap.ui.define([
                 oViewModel.setProperty("/delay", iOriginalBusyDelay);
             });
 
-            /* this.getView().addEventDelegate({
-                onBeforeFirstShow: function () {
-                    this.getOwnerComponent().oListSelector.setBoundMasterList(oList);
-                }.bind(this)
-            }); */
-
             this.getRouter().getRoute("list").attachPatternMatched(this._onMasterMatched, this);
-            this.getRouter().attachBypassed(this.onBypassed, this);
         },
 
         /* =========================================================== */
         /* event handlers                                              */
         /* =========================================================== */
-
         /**
          * After list data is available, this handler method updates the
          * list counter
@@ -72,14 +60,13 @@ sap.ui.define([
             var firstItem = this._oList.getSelectedItem();
             if (firstItem) {
                 this._oList.setSelectedItem(firstItem);
-                this.getRouter().navTo("object", {
-                    objectId: firstItem.getBindingContext().getProperty("TalepNo")
+                this.getRouter().navTo("detail", {
+                    Reinr: firstItem.getBindingContext().getProperty("Reinr"),
+                    GrupSeyahatNo: firstItem.getBindingContext().getProperty("GrupSeyahatNo")
                 }, bReplace);
             } else {
                 this.getModel("appView").setProperty("/layout", "OneColumn");
-
             }
-
         },
 
         /**
@@ -123,17 +110,22 @@ sap.ui.define([
         onRefresh: function () {
             this._readList();
         },
-        onCreateNewTravel: function () {
+
+        onCreateNewTravel: function (bGroup) {
+            let oScreenModel = this.getModel("screenModels");
+            oScreenModel.setProperty("/isGroupTravel", bGroup);
+
             var bReplace = !Device.system.phone;
-            this.getModel("appView").setProperty("/layout", "OneColumn");
-            this.getRouter().navTo("CreateTravel", bReplace);
+            this.getRouter().navTo("createTravel", bReplace);
         },
+
         _onMasterMatched: function () {
             this.oDataModel = this.getOwnerComponent().getModel();
             this.getModel("appView").setProperty("/layout", "OneColumn");
             this._checkMessages();
             this._readList();
         },
+
         _readList: async function () {
             _oGlobalBusyDialog.open();
             try {
@@ -142,17 +134,18 @@ sap.ui.define([
                 this._oList.setModel(new JSONModel(oResponse.results));
                 this._oList.bindAggregation("items", {
                     path: "/",
-                    template: this._oListTemp, templateShareable: true
+                    template: this._oListTemp,
+                    templateShareable: true
                 });
                 var sTitle = this.getResourceBundle().getText("listTitleCount", [oResponse.results.length]);
                 this.getModel("listView").setProperty("/title", sTitle);
                 this.getModel("listView").setProperty("/count", oResponse.results.length);
-            } catch (error) {
-                this._showServiceError(error);
+
             } finally {
                 _oGlobalBusyDialog.close();
             }
         },
+
         onSelectionChange: function (oEvent) {
             var oList = oEvent.getSource(),
                 bSelected = oEvent.getParameter("selected");
@@ -163,14 +156,17 @@ sap.ui.define([
                 this._showDetail(oEvent.getParameter("listItem") || oEvent.getSource());
             }
         },
+
         _showDetail: function (oItem) {
             var bReplace = !Device.system.phone;
             // set the layout property of FCL control to show two columns
             this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
-            this.getRouter().navTo("object", {
-                objectId: oItem.getBindingContext().getProperty("GrupSeyahatNo")
+            this.getRouter().navTo("detail", {
+                Reinr: oItem.getBindingContext().getProperty("Reinr"),
+                GrupSeyahatNo: oItem.getBindingContext().getProperty("GrupSeyahatNo")
             }, bReplace);
         },
+
         _createViewModel: function () {
             return new JSONModel({
                 isFilterBarVisible: false,

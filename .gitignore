@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .scp/
+.vscode/
 .env
 Makefile*.mta
 mta_archives
@@ -8,3 +9,4 @@ mta-*
 resources
 archive.zip
 .*_mta_build_tmp
+package-lock.json

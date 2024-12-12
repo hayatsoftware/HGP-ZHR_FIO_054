@@ -1,57 +1,52 @@
-<mvc:View controllerName="com.hayat.grupseyahat.grupseyahattalebi.controller.List"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m"
-    xmlns:c="sap.ui.core"
-    xmlns:html="http://www.w3.org/1999/xhtml" displayBlock="true" height="100%" busyIndicatorDelay="0">
-    <Page title="{listView>/title}" enableScrolling="true" floatingFooter="true">
-
-        <List id="list" width="auto" class="sapFDynamicPageAlignContent" items="{
-                path: '/TravelSet',
-                sorter: {
-                    path: 'CreatedAt',
-                    descending: false
-                }
-                
-            }" busyIndicatorDelay="{listView>/delay}" noDataText="{listView>/noDataText}" mode="{= ${device>/system/phone} ? 'None' : 'SingleSelectMaster'}" growing="true" growingScrollToLoad="true" updateFinished=".onUpdateFinished" selectionChange=".onSelectionChange">
-            <headerToolbar>
-                <OverflowToolbar>
-                    <ObjectMarker type="Flagged"></ObjectMarker>
-                     <Text text="{i18n>grupTravel}"/>
-                    <ToolbarSpacer ></ToolbarSpacer>
-                    <SearchField id="searchField" search=".onSearch" showRefreshButton="true" width="auto">
-                        <layoutData>
-                            <OverflowToolbarLayoutData minWidth="150px" maxWidth="240px" shrinkable="true" priority="NeverOverflow" />
-                        </layoutData>
-                    </SearchField>
-                </OverflowToolbar>
-            </headerToolbar>
-            <items>
-
-                <ObjectListItem type="Navigation" press=".onSelectionChange" title="{Purpose}-{TripActivityName}">
-                    <customData>
-                        <c:CustomData key="grupSeyahatCSS" value="{= ${Grup} ? 'X' : '' }" writeToDom="true" />
-                    </customData>
-
-                    <firstStatus>
-                        <ObjectStatus text="{StatusText}" state="{= ${Status} === '1' ? 'Warning' : ${Status} === '2' ? 'Success' : ${Status} === '3' ? 'Error' : 'None' }" />
-                    </firstStatus>
-
-                    <ObjectAttribute text="{CountryName}" />
-                    <ObjectAttribute text="{RegionName}" />
-                    <ObjectAttribute text="{path:'Arrival', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd/MM/yyyy'}}-{path:'Departure', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd/MM/yyyy'}}" />
-                    <markers>
-                        <ObjectMarker type="Flagged" visible="{Grup}" />
-                    </markers>
-                </ObjectListItem>
-            </items>
-        </List>
-        <footer>
-            <OverflowToolbar>
-                <Button id="idMessagePopover" visible="{= ${message>/}.length > 0 }" text="{= ${message>/}.length }" type="Emphasized" icon="sap-icon://message-popup" press=".onMessageButtonPress" />
-                <ToolbarSpacer>
-                </ToolbarSpacer>
-                <Button id="idBtnCR" text="{i18n>crateTravel}" press=".onCreateNewTravel" icon="sap-icon://add" type="Accept" />
-            </OverflowToolbar>
-        </footer>
-    </Page>
+<mvc:View controllerName="com.hayat.grupseyahat.grupseyahattalebi.controller.List" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:s="sap.f.semantic" xmlns:c="sap.ui.core"
+    busyIndicatorDelay="0">
+    <s:SemanticPage busy="{appView>/busy}" busyIndicatorDelay="{appView>/delay}" showFooter="true">
+        <s:titleHeading>
+            <Title text="{listView>/title}" />
+        </s:titleHeading>
+        <s:content>
+            <List id="list" width="auto" items="{ path:'/TravelSet', sorter:{ path:'CreatedAt', descending:false } }" busyIndicatorDelay="{listView>/delay}"
+                noDataText="{listView>/noDataText}" mode="{= ${device>/system/phone} ? 'None' : 'SingleSelectMaster'}" growing="true" growingScrollToLoad="true"
+                updateFinished=".onUpdateFinished" selectionChange=".onSelectionChange" class="sapFSemanticPageAlignContent">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <ObjectMarker type="Flagged" />
+                        <Text text="{i18n>groupTravel}" />
+                        <ToolbarSpacer />
+                        <SearchField id="searchField" search=".onSearch" showRefreshButton="true" width="auto" />
+                    </OverflowToolbar>
+                </headerToolbar>
+                <items>
+                    <ObjectListItem type="Navigation" press=".onSelectionChange" title="{Purpose} - {TripActivityName}">
+                        <customData>
+                            <c:CustomData key="grupSeyahatCSS" value="{= ${Grup} ? 'X' : '' }" writeToDom="true" />
+                        </customData>
+                        <firstStatus>
+                            <ObjectStatus text="{StatusText}" state="{= ${Status} === '1' ? 'Warning' : ${Status} === '2' ? 'Success' : ${Status} === '3' ? 'Error' : 'None' }" />
+                        </firstStatus>
+                        <attributes>
+                            <ObjectAttribute title="{i18n>country}" text="{CountryName}" />
+                            <ObjectAttribute title="{i18n>region}" text="{RegionName}" />
+                            <ObjectAttribute title="{i18n>travelDates}"
+                                text="{ path:'Departure', type:'sap.ui.model.type.Date', formatOptions:{ pattern:'dd/MM/yyyy'} } - { path:'Arrival', type:'sap.ui.model.type.Date', formatOptions:{ pattern:'dd/MM/yyyy' } }" />
+                        </attributes>
+                        <markers>
+                            <ObjectMarker type="Flagged" visible="{Grup}" />
+                        </markers>
+                    </ObjectListItem>
+                </items>
+            </List>
+        </s:content>
+        <s:messagesIndicator>
+            <s:MessagesIndicator id="idMessagePopover" press=".onMessageButtonPress" />
+        </s:messagesIndicator>
+        <s:footerCustomActions>
+            <MenuButton icon="sap-icon://create" type="Emphasized" menuPosition="EndBottom" text="{i18n>createTravel}">
+                <Menu>
+                    <MenuItem icon="sap-icon://employee" text="{i18n>individual}" press=".onCreateNewTravel(false)" />
+                    <MenuItem icon="sap-icon://group" text="{i18n>group}" press=".onCreateNewTravel(true)" enabled="{appView>/groupAuth}" />
+                </Menu>
+            </MenuButton>
+        </s:footerCustomActions>
+    </s:SemanticPage>
 </mvc:View>

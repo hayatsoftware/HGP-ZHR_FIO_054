@@ -1,21 +1,32 @@
 {
+    "isGroupTravel": false,
     "screenEditableVisible": {
-        "GeneralEditable": true,
+        "GeneralEditable": false,
         "SeyahatBolgesi": false,
-        "UserList": false
+        "DetailTitle": ""
+    },
+    "mandatoryFieldsCreateTravel": {
+        "Purpose": "idPurpose",
+        "TripActivity": "idTripActivity",
+        "Departure": "idDeparture",
+        "Arrival": "idArrival",
+        "CountryCode": "idCountryCode",
+        "RegionCode": "idRegionCode",
+        "Note": "idNote"
     },
     "travelHeader": {
+        "Reinr": "",
         "GrupSeyahatNo": "",
         "CountryName": "",
         "CountryCode": "",
         "RegionName": "",
         "RegionCode": "",
-        "Arrival": "",
-        "Departure": "",
+        "Arrival": null,
+        "Departure": null,
         "Purpose": "",
         "TripActivity": "",
         "Note": "",
-        "LocationEnd":""
+        "LocationEnd": ""
     },
     "travelItem": {
         "Username": "",
@@ -33,13 +44,9 @@
         "PlansText": "",
         "Plans": ""
     },
-    "mandatoryFieldsCreateTravel": {
-        "Purpose": "idPurpose",
-        "TripActivity": "idTripActivity",
-        "Departure": "idDeparture",
-        "Arrival": "idArrival",
-        "CountryCode": "idCountryCode",
-        "RegionCode": "idRegionCode",
-        "Note": "idNote"
+    "estimatedCost": {
+        "Currency": "",
+        "Value": 0,
+        "Kassa": false
     }
 }
