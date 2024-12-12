@@ -468,7 +468,10 @@ sap.ui.define([
                 let path = "/".concat(line),
                     deleteIndex = parseInt(path.substring(path.lastIndexOf("/") + 1));
 
-                oTable.getModel(sModelName).getData().splice(deleteIndex, 1);
+                let bNonEditable = oTable.getSelectedContexts().find(oContext => oContext.getPath() === path).getProperty("NonEditable");
+                if (!bNonEditable) {
+                    oTable.getModel(sModelName).getData().splice(deleteIndex, 1);
+                }
             });
 
             oTable.getModel(sModelName).refresh();
@@ -477,6 +480,7 @@ sap.ui.define([
 
         _saveCreateTravel: function (bCreate) {
             var oMandatoryFields = this._getJsonData("/mandatoryFieldsCreateTravel"),
+                bNewRequest = this._getJsonData("/isNewRequest"),
                 oHeader = this.getView().getModel("Header").getData(),
                 aItem = this.getView().getModel("UserList").getData(),
                 sValueState = "",
@@ -505,7 +509,7 @@ sap.ui.define([
                 }
             }
 
-            if (oHeader.Grup && aItem.length === 0) {
+            if (bNewRequest && oHeader.Grup && aItem.length === 0) {
                 MessageBox.error(this._getText("MANDPERNR"));
                 return;
             }
@@ -520,34 +524,49 @@ sap.ui.define([
         },
 
         _postSave: async function (bCreate) {
-            var oDeepData = this.getView().getModel("Header").getData();
+            let oDeepData = this.getView().getModel("Header").getData();
+            oDeepData.MESSAGERETURNSET = [];
             oDeepData.TRAVELITEMSET = this.getView().getModel("UserList").getData();
-            oDeepData.TRAVELITEMSET.forEach(oTravelItem => { oTravelItem.ESTIMATEDCOSTSET = this.getView().getModel("EstimatedCostList").getData(); });
-            oDeepData.MessageReturnSet = [];
+            oDeepData.TRAVELITEMSET.forEach(oTravelItem => {
+                delete oTravelItem.NonEditable;
+                oTravelItem.ESTIMATEDCOSTSET = this.getView().getModel("EstimatedCostList").getData();
+                oTravelItem.ESTIMATEDCOSTSET.forEach(oEstimatedCost => {
+                    oEstimatedCost.Value = (+oEstimatedCost.Value).toFixed(2);
+                });
+            });
 
             _oGlobalBusyDialog.open();
 
             try {
-                let oResponse = await this._sendCreateData("/TravelSet", oDeepData);
-                let oMessageManager = sap.ui.getCore().getMessageManager();
-                var messageTypeMap = {
-                    "E": sap.ui.core.MessageType.Error,
-                    "S": sap.ui.core.MessageType.Success
-                }
-                oResponse.MessageReturnSet.results.forEach(oValues => {
-                    var oMessageType = messageTypeMap[oValues.Type] || sap.ui.core.MessageType.None;
+                let bHasError = false,
+                    oResponse = await this._sendCreateData("/TravelSet", oDeepData),
+                    oMessageManager = sap.ui.getCore().getMessageManager(),
+                    mMessageType = {
+                        E: sap.ui.core.MessageType.Error,
+                        S: sap.ui.core.MessageType.Success,
+                        W: sap.ui.core.MessageType.Warning
+                    };
+
+                oResponse.MESSAGERETURNSET.results.forEach(oValues => {
+                    var sMessageType = mMessageType[oValues.Type] || sap.ui.core.MessageType.None;
 
                     oMessageManager.addMessages(
                         new sap.ui.core.message.Message({
                             message: oValues.Message,
-                            type: oMessageType,
+                            type: sMessageType,
                             persistent: false
                         })
                     );
+
+                    if (sMessageType === sap.ui.core.MessageType.Error) {
+                        bHasError = true;
+                    }
                 });
 
-                var bReplace = !Device.system.phone;
-                this.getRouter().navTo("list", {}, bReplace);
+                if (oDeepData.Grup || !bHasError) {
+                    let bReplace = !Device.system.phone;
+                    this.getRouter().navTo("list", {}, bReplace);
+                }
 
             } finally {
                 _oGlobalBusyDialog.close();

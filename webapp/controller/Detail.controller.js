@@ -18,9 +18,9 @@ sap.ui.define([
 
 		toggleEdit: function () {
 			let oScreenModel = this.getModel("screenModels"),
-				bEditable = oScreenModel.getProperty("/screenEditableVisible/GeneralEditable");
+				bEditable = oScreenModel.getProperty("/generalEditable");
 
-			oScreenModel.setProperty("/screenEditableVisible/GeneralEditable", !bEditable);
+			oScreenModel.setProperty("/generalEditable", !bEditable);
 		},
 
 		_onDetailObjectMatched: function (oEvent) {
@@ -30,7 +30,8 @@ sap.ui.define([
 				bGroupTravel = !!+sGrupSeyahatNo;
 
 			let oScreenModel = this.getModel("screenModels");
-			oScreenModel.setProperty("/screenEditableVisible/GeneralEditable", false);
+			oScreenModel.setProperty("/generalEditable", false);
+			oScreenModel.setProperty("/isNewRequest", false);
 			oScreenModel.setProperty("/isGroupTravel", bGroupTravel);
 
 			let sTitleKey = bGroupTravel ? "groupTravelRequest" : "travelRequest";
@@ -38,13 +39,13 @@ sap.ui.define([
 
 			this.resetMessageModel();
 			this._getData(sReinr, sGrupSeyahatNo);
-			this._getItemData();
 		},
 
 		_onCreateTravelObjectMatched: function () {
 			this._bNewRequest = true;
 			let oScreenModel = this.getModel("screenModels");
-			oScreenModel.setProperty("/screenEditableVisible/GeneralEditable", true);
+			oScreenModel.setProperty("/generalEditable", true);
+			oScreenModel.setProperty("/isNewRequest", true);
 
 			let oAppViewModel = this.getModel("appView");
 			oAppViewModel.setProperty("/actionButtonsInfo/midColumn/fullScreen", true);
@@ -71,7 +72,6 @@ sap.ui.define([
 			let oScreenModel = this.getModel("screenModels"),
 				bGroupTravel = oScreenModel.getProperty("/isGroupTravel"),
 				aUserList = [],
-				aUserCurrentList = [],
 				aEstimatedCostList = [];
 
 			if (this._bNewRequest && !bGroupTravel) {
@@ -90,7 +90,6 @@ sap.ui.define([
 			}
 
 			this.getView().setModel(new JSONModel(aUserList), "UserList");
-			this.getView().setModel(new JSONModel(aUserCurrentList), "UserCurrentList");
 			this.getView().setModel(new JSONModel(aEstimatedCostList), "EstimatedCostList");
 		},
 
@@ -106,17 +105,18 @@ sap.ui.define([
 
 			try {
 				_oGlobalBusyDialog.open();
-				var oTravelRequest = await this._sendReadData(sPath, mUrlParameters);
-				this.getView().setModel(new JSONModel(oTravelRequest), "Header");
-				this.getView().setModel(new JSONModel(oTravelRequest.TRAVELITEMSET.results), "UserCurrentList");
+				var oTravelRequest = await this._sendReadData(sPath, mUrlParameters),
+					aEstimatedCostList = [];
 
-				let aEstimatedCostList = [];
 				oTravelRequest.TRAVELITEMSET.results.forEach(oTravelItem => {
+					oTravelItem.NonEditable = true;
 					oTravelItem.ESTIMATEDCOSTSET.results.forEach(oCost => {
 						aEstimatedCostList.push(oCost);
 					});
 				});
 
+				this.getView().setModel(new JSONModel(oTravelRequest), "Header");
+				this.getView().setModel(new JSONModel(oTravelRequest.TRAVELITEMSET.results), "UserList");
 				this.getView().setModel(new JSONModel(aEstimatedCostList), "EstimatedCostList");
 
 			} finally {
@@ -128,7 +128,7 @@ sap.ui.define([
 			let oScreenModel = this.getModel("screenModels"),
 				oResourceBundle = this.getResourceBundle();
 
-			oScreenModel.setProperty("/screenEditableVisible/DetailTitle", oResourceBundle.getText(sI18nKey));
+			oScreenModel.setProperty("/detailPageTitle", oResourceBundle.getText(sI18nKey));
 		},
 
 		toggleFullScreen: function () {
@@ -158,8 +158,8 @@ sap.ui.define([
 			this._addRow(sModelName, sJSONProperty);
 		},
 
-		onDeleteRow: function () {
-			this._deleteRow();
+		onDeleteRow: function (sModelName, sTableId) {
+			this._deleteRow(sModelName, sTableId);
 		},
 
 		onUserSearchHelp: function (oEvent) {

@@ -194,7 +194,7 @@
                 <Property Name="Value" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="2" sap:unicode="false" sap:label="Packed integer: 8 bytes, 2 decimal places, leading sign" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Currency" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Para birimi" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="currency-code"/>
                 <Property Name="Kassa" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Nakit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Datvs" Type="Edm.DateTime" Nullable="false" Precision="0" sap:unicode="false" sap:label="Ödeme tarihi" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Datvs" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Ödeme tarihi" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
             </EntityType>
             <EntityType Name="UserAuthorization" sap:content-version="1">
                 <Key>

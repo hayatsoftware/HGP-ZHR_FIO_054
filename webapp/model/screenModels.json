@@ -1,9 +1,8 @@
 {
+    "isNewRequest": false,
     "isGroupTravel": false,
-    "screenEditableVisible": {
-        "GeneralEditable": false,
-        "DetailTitle": ""
-    },
+    "generalEditable": false,
+    "detailPageTitle": "",
     "mandatoryFieldsCreateTravel": {
         "Purpose": "idPurpose",
         "TripActivity": "idTripActivity",

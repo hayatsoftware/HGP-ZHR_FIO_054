@@ -1,17 +1,17 @@
 <mvc:View controllerName="com.hayat.grupseyahat.grupseyahattalebi.controller.Detail" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form"
 	xmlns:c="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:s="sap.f.semantic">
-	<s:SemanticPage busy="{appView>/busy}" busyIndicatorDelay="{appView>/delay}" showFooter="{screenModels>/screenEditableVisible/GeneralEditable}">
+	<s:SemanticPage busy="{appView>/busy}" busyIndicatorDelay="{appView>/delay}" showFooter="{screenModels>/generalEditable}">
 		<s:titleExpandedHeading>
-			<Title text="{screenModels>/screenEditableVisible/DetailTitle}" />
+			<Title text="{screenModels>/detailPageTitle}" />
 		</s:titleExpandedHeading>
 		<s:titleSnappedHeading>
 			<HBox>
 				<f:Avatar displayShape="Square" src="sap-icon://flight" class="sapUiMediumMarginEnd" />
-				<Title text="{screenModels>/screenEditableVisible/DetailTitle}" />
+				<Title text="{screenModels>/detailPageTitle}" />
 			</HBox>
 		</s:titleSnappedHeading>
 		<s:titleSnappedOnMobile>
-			<Title text="{screenModels>/screenEditableVisible/DetailTitle}" />
+			<Title text="{screenModels>/detailPageTitle}" />
 		</s:titleSnappedOnMobile>
 		<s:headerContent>
 			<FlexBox wrap="Wrap" fitContainer="true">
@@ -32,15 +32,15 @@
 			</FlexBox>
 		</s:headerContent>
 		<s:editAction>
-			<s:EditAction enabled="{Header>/Editable}" visible="{= !${screenModels>/screenEditableVisible/GeneralEditable} }" press=".toggleEdit" />
+			<s:EditAction enabled="{Header>/Editable}" visible="{= !${screenModels>/generalEditable} }" press=".toggleEdit" />
 		</s:editAction>
 		<s:fullScreenAction>
 			<s:FullScreenAction press=".toggleFullScreen"
-				visible="{= !${device>/system/phone} &amp;&amp; !${appView>/actionButtonsInfo/midColumn/fullScreen} &amp;&amp; !${screenModels>/screenEditableVisible/GeneralEditable} }" />
+				visible="{= !${device>/system/phone} &amp;&amp; !${appView>/actionButtonsInfo/midColumn/fullScreen} &amp;&amp; !${screenModels>/generalEditable} }" />
 		</s:fullScreenAction>
 		<s:exitFullScreenAction>
 			<s:ExitFullScreenAction press=".toggleFullScreen"
-				visible="{= !${device>/system/phone} &amp;&amp; ${appView>/actionButtonsInfo/midColumn/fullScreen} &amp;&amp; !${screenModels>/screenEditableVisible/GeneralEditable} }" />
+				visible="{= !${device>/system/phone} &amp;&amp; ${appView>/actionButtonsInfo/midColumn/fullScreen} &amp;&amp; !${screenModels>/generalEditable} }" />
 		</s:exitFullScreenAction>
 		<s:closeAction>
 			<s:CloseAction press=".onCloseDetailPress" />
@@ -53,50 +53,50 @@
 		</s:footerMainAction>
 		<s:content>
 			<VBox fitContainer="true" class="sapFSemanticPageAlignContent">
-				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="0">
+				<l:Grid defaultSpan="XL6 L6 M6 S12">
 					<!-- seyahat ayrıntıları -->
 					<form:SimpleForm title="{i18n>travelDetail}" layout="ResponsiveGridLayout" editable="true" emptySpanXL="6" emptySpanL="6" emptySpanM="4">
 						<Label text="{i18n>reason}" />
-						<Input value="{Header>/Purpose}" editable="{screenModels>/screenEditableVisible/GeneralEditable}" id="idPurpose" />
+						<Input value="{Header>/Purpose}" editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" id="idPurpose" />
 						<Label text="{i18n>purpose}" />
 						<ComboBox items="{ path:'/TripActivitiesSet', templateShareable:true }" selectedKey="{Header>/TripActivity}"
-							editable="{screenModels>/screenEditableVisible/GeneralEditable}" id="idTripActivity">
+							editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" id="idTripActivity">
 							<c:ListItem key="{Id}" text="{Description}" />
 						</ComboBox>
 						<Label text="{i18n>project}" />
 						<ComboBox items="{ path:'/ProjectSet', templateShareable:true }" selectedKey="{Header>/Zzproje}"
-							editable="{screenModels>/screenEditableVisible/GeneralEditable}" id="idZzproje" visible="{= ${Header>/TripActivity} === 'G' }">
+							editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" id="idZzproje"
+							visible="{= ${Header>/TripActivity} === 'G' }">
 							<c:ListItem key="{ProjeId}" text="{Proje}" />
 						</ComboBox>
 						<Label text="{i18n>startDate}" />
-						<DatePicker dateValue="{Header>/Departure}" editable="{screenModels>/screenEditableVisible/GeneralEditable}" id="idDeparture" />
+						<DatePicker dateValue="{Header>/Departure}" editable="{screenModels>/generalEditable}" id="idDeparture" />
 						<Label text="{i18n>endDate}" />
-						<DatePicker dateValue="{Header>/Arrival}" editable="{screenModels>/screenEditableVisible/GeneralEditable}" id="idArrival" />
+						<DatePicker dateValue="{Header>/Arrival}" editable="{screenModels>/generalEditable}" id="idArrival" />
 						<Label text="{i18n>country}" />
 						<Input value="{= ${Header>/CountryCode} ? ${Header>/CountryName} + ' (' + ${Header>/CountryCode} + ')' : ''}" valueHelpOnly="true" showValueHelp="true"
-							valueHelpRequest=".onValueHelpGeneral($event,'country')" editable="{screenModels>/screenEditableVisible/GeneralEditable}" id="idCountryCode" />
+							valueHelpRequest=".onValueHelpGeneral($event,'country')" editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }"
+							id="idCountryCode" />
 						<Label text="{i18n>region}" />
 						<Input value="{= ${Header>/RegionCode} ? ${Header>/RegionName} + ' (' + ${Header>/RegionCode} + ')' : ''}" valueHelpOnly="true" showValueHelp="true"
-							valueHelpRequest=".onValueHelpGeneral($event, 'region', ${Header>/CountryCode})" editable="{screenModels>/screenEditableVisible/GeneralEditable}"
-							id="idRegionCode" />
+							valueHelpRequest=".onValueHelpGeneral($event, 'region', ${Header>/CountryCode})"
+							editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" id="idRegionCode" />
 						<Label text="{i18n>place}" />
-						<Input value="{Header>/LocationEnd}" editable="{screenModels>/screenEditableVisible/GeneralEditable}" maxLength="59" />
+						<Input value="{Header>/LocationEnd}" editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" maxLength="59" />
 						<Label text="{i18n>reasonText}" />
-						<TextArea value="{Header>/Note}" editable="{screenModels>/screenEditableVisible/GeneralEditable}" rows="3" maxLength="1024" showExceededText="true"
-							id="idNote" />
+						<TextArea value="{Header>/Note}" editable="{screenModels>/generalEditable}" rows="3" maxLength="1024" showExceededText="true" id="idNote" />
 					</form:SimpleForm>
 
 					<!-- avans girişi -->
-					<Table visible="{= !${screenModels>/isGroupTravel} }" fixedLayout="true" items="{EstimatedCostList>/}" mode="MultiSelect" id="idEstimatedCostList"
-						class="sapUiMediumMarginTop">
+					<Table visible="{= !${screenModels>/isGroupTravel} }" fixedLayout="true" items="{EstimatedCostList>/}" mode="MultiSelect" id="idEstimatedCostList">
 						<headerToolbar>
 							<OverflowToolbar>
 								<Title text="{i18n>ESTIMATEDCOSTLIST}" />
 								<ToolbarSpacer />
 								<Button icon="sap-icon://add" text="{i18n>ROWADD}" press=".onAddRow('EstimatedCostList', '/estimatedCost')"
-									enabled="{screenModels>/screenEditableVisible/GeneralEditable}" />
+									enabled="{screenModels>/generalEditable}" />
 								<Button icon="sap-icon://delete" text="{i18n>ROWDEL}" press=".onDeleteRow('EstimatedCostList', 'idEstimatedCostList')"
-									enabled="{screenModels>/screenEditableVisible/GeneralEditable}" />
+									enabled="{screenModels>/generalEditable}" />
 							</OverflowToolbar>
 						</headerToolbar>
 						<columns>
@@ -105,45 +105,28 @@
 							<Column demandPopin="true" minScreenWidth="Tablet" hAlign="Center"><Text text="{i18n>KASSA}" /></Column>
 						</columns>
 						<ColumnListItem>
-							<Input value="{ path:'EstimatedCostList>Value', type:'sap.ui.model.type.Float', formatOptions:{ decimals:2 } }" textAlign="End" />
-							<ComboBox selectedKey="{EstimatedCostList>Currency}">
+							<Input value="{ path:'EstimatedCostList>Value', type:'sap.ui.model.type.Float', formatOptions:{ decimals:2 } }" textAlign="End"
+								editable="{screenModels>/generalEditable}" />
+							<ComboBox selectedKey="{EstimatedCostList>Currency}" editable="{screenModels>/generalEditable}">
 								<c:ListItem key="TRY" text="TRY" />
 								<c:ListItem key="USD" text="USD" />
 								<c:ListItem key="EUR" text="EUR" />
 							</ComboBox>
-							<CheckBox selected="{EstimatedCostList>Kassa}" />
+							<CheckBox selected="{EstimatedCostList>Kassa}" editable="{screenModels>/generalEditable}" />
 						</ColumnListItem>
 					</Table>
 				</l:Grid>
 
-				<!-- mevcut liste -->
-				<Table visible="{= !!${UserCurrentList>/}.length }" fixedLayout="false" items="{UserCurrentList>/}" headerText="{i18n>USERCURLIST}" class="sapUiTinyMarginTop">
-					<columns>
-						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>PERSONNEL}" /></Column>
-						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>TITLE}" /></Column>
-						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>COSTCENTER}" /></Column>
-						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>INTERNALORDER}" /></Column>
-						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>WBSELEMENT}" /></Column>
-					</columns>
-					<ColumnListItem>
-						<ObjectIdentifier title="{UserCurrentList>Pernr}" text="{UserCurrentList>FirstName} {UserCurrentList>LastName}" />
-						<ObjectIdentifier title="{UserCurrentList>Plans}" text="{UserCurrentList>PlansText}" />
-						<ObjectIdentifier title="{UserCurrentList>CostCenter}" text="{UserCurrentList>CostCenterName}" />
-						<ObjectIdentifier title="{UserCurrentList>InternalOrder}" text="{UserCurrentList>InternalOrderName}" />
-						<ObjectIdentifier title="{UserCurrentList>WbsElement}" text="{UserCurrentList>WbsElementName}" />
-					</ColumnListItem>
-				</Table>
-
-				<!-- seyahat edecekler listesi -->
-				<Table fixedLayout="false" items="{UserList>/}" mode="MultiSelect" id="idUserList" class="sapUiMediumMarginTop sapUiMediumMarginBottom">
+				<!-- katılımcı listesi -->
+				<Table fixedLayout="false" items="{UserList>/}" mode="MultiSelect" id="idUserList" class="sapUiMediumMarginBottom">
 					<headerToolbar>
 						<OverflowToolbar>
 							<Title text="{i18n>USERLIST}" />
 							<ToolbarSpacer />
 							<Button icon="sap-icon://add" text="{i18n>ROWADD}" press=".onAddRow('UserList', '/travelItem')" visible="{screenModels>/isGroupTravel}"
-								enabled="{screenModels>/screenEditableVisible/GeneralEditable}" />
+								enabled="{screenModels>/generalEditable}" />
 							<Button icon="sap-icon://delete" text="{i18n>ROWDEL}" press=".onDeleteRow('UserList', 'idUserList')" visible="{screenModels>/isGroupTravel}"
-								enabled="{screenModels>/screenEditableVisible/GeneralEditable}" />
+								enabled="{screenModels>/generalEditable}" />
 						</OverflowToolbar>
 					</headerToolbar>
 					<columns>
@@ -155,28 +138,28 @@
 					</columns>
 					<ColumnListItem>
 						<VBox>
-							<Input value="{UserList>Pernr}" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onUserSearchHelp"
-								editable="{= ${screenModels>/screenEditableVisible/GeneralEditable} &amp;&amp; ${screenModels>/isGroupTravel} }" />
-							<Label design="Bold" text="{UserList>FirstName} {UserList>LastName}" class="sapUiTinyMarginTop" />
+							<Input value="{UserList>Pernr}" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onUserSearchHelp" class="sapUiTinyMarginBottom"
+								editable="{= ${screenModels>/generalEditable} &amp;&amp; ${screenModels>/isGroupTravel} &amp;&amp; !${UserList>NonEditable} }" />
+							<Label design="Bold" text="{UserList>FirstName} {UserList>LastName}" />
 						</VBox>
 						<VBox>
-							<Input value="{UserList>Plans}" editable="false" />
-							<Label design="Bold" text="{UserList>PlansText}" class="sapUiTinyMarginTop" />
+							<Input value="{UserList>Plans}" class="sapUiTinyMarginBottom" editable="false" />
+							<Label design="Bold" text="{UserList>PlansText}" />
 						</VBox>
 						<VBox>
 							<Input value="{UserList>CostCenter}" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpGeneral($event,'costcenter')"
-								editable="{= ${screenModels>/screenEditableVisible/GeneralEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" />
-							<Label design="Bold" text="{UserList>CostCenterName}" class="sapUiTinyMarginTop" />
+								class="sapUiTinyMarginBottom" editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" />
+							<Label design="Bold" text="{UserList>CostCenterName}" />
 						</VBox>
 						<VBox>
 							<Input value="{UserList>InternalOrder}" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpGeneral($event,'internalorder')"
-								editable="{= ${screenModels>/screenEditableVisible/GeneralEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" />
-							<Label design="Bold" text="{UserList>InternalOrderName}" class="sapUiTinyMarginTop" />
+								class="sapUiTinyMarginBottom" editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" />
+							<Label design="Bold" text="{UserList>InternalOrderName}" />
 						</VBox>
 						<VBox>
 							<Input value="{UserList>WbsElement}" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpGeneral($event,'wbselement')"
-								editable="{= ${screenModels>/screenEditableVisible/GeneralEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" />
-							<Label design="Bold" text="{UserList>WbsElementName}" class="sapUiTinyMarginTop" />
+								class="sapUiTinyMarginBottom" editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" />
+							<Label design="Bold" text="{UserList>WbsElementName}" />
 						</VBox>
 					</ColumnListItem>
 				</Table>
