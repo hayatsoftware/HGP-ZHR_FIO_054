@@ -242,14 +242,13 @@ sap.ui.define([
 
             switch (sType) {
                 case "country":
-                    oHeaderModel.setProperty("/CountryCode", sKey)
-                    oHeaderModel.setProperty("/CountryName", sText)
-                    this.getView().getModel().setProperty("/SeyahatBolgesi", true)
+                    oHeaderModel.setProperty("/CountryCode", sKey);
+                    oHeaderModel.setProperty("/CountryName", sText);
                     break;
 
                 case "region":
-                    oHeaderModel.setProperty("/RegionCode", sKey)
-                    oHeaderModel.setProperty("/RegionName", sText)
+                    oHeaderModel.setProperty("/RegionCode", sKey);
+                    oHeaderModel.setProperty("/RegionName", sText);
 
                     if (!oHeaderModel.getProperty("/Grup")) {
                         let oUserDetail = this.getView().getModel("UserList").getProperty("/0"),
@@ -269,20 +268,20 @@ sap.ui.define([
                     break;
 
                 case "costcenter":
-                    oUserListModel.setProperty(this._sPath + "/CostCenter", sKey)
-                    oUserListModel.setProperty(this._sPath + "/CostCenterName", sText)
+                    oUserListModel.setProperty(this._sPath + "/CostCenter", sKey);
+                    oUserListModel.setProperty(this._sPath + "/CostCenterName", sText);
                     oUserListModel.refresh(true);
                     break;
 
                 case "internalorder":
-                    oUserListModel.setProperty(this._sPath + "/InternalOrder", sKey)
-                    oUserListModel.setProperty(this._sPath + "/InternalOrderName", sText)
+                    oUserListModel.setProperty(this._sPath + "/InternalOrder", sKey);
+                    oUserListModel.setProperty(this._sPath + "/InternalOrderName", sText);
                     oUserListModel.refresh(true);
                     break;
 
                 case "wbselement":
-                    oUserListModel.setProperty(this._sPath + "/WbsElement", sKey)
-                    oUserListModel.setProperty(this._sPath + "/WbsElementName", sText)
+                    oUserListModel.setProperty(this._sPath + "/WbsElement", sKey);
+                    oUserListModel.setProperty(this._sPath + "/WbsElementName", sText);
                     oUserListModel.refresh(true);
                     break;
             }
@@ -495,6 +494,11 @@ sap.ui.define([
                     this.getView().byId(oMandatoryFields[i]).setValueState(sValueState);
                 }
 
+                if (oHeader.TripActivity === "G" && !oHeader.Zzproje) {
+                    this.getView().byId("idZzproje").setValueState(sValueState);
+                    bError = true;
+                }
+
                 if (bError) {
                     MessageBox.error(this._getText("MANDFIELDS"));
                     return;
@@ -508,7 +512,7 @@ sap.ui.define([
 
             MessageBox.confirm(this._getText("createTravelTitle"), {
                 onClose: (oAction) => {
-                    if (oAction === MessageBox.Action.YES) {
+                    if (oAction === MessageBox.Action.OK) {
                         this._postSave(bCreate);
                     }
                 }

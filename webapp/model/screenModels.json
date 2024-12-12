@@ -2,7 +2,6 @@
     "isGroupTravel": false,
     "screenEditableVisible": {
         "GeneralEditable": false,
-        "SeyahatBolgesi": false,
         "DetailTitle": ""
     },
     "mandatoryFieldsCreateTravel": {

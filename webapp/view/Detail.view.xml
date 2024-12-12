@@ -59,9 +59,14 @@
 						<Label text="{i18n>reason}" />
 						<Input value="{Header>/Purpose}" editable="{screenModels>/screenEditableVisible/GeneralEditable}" id="idPurpose" />
 						<Label text="{i18n>purpose}" />
-						<ComboBox items="{ path:'/TripActivitiesSet', templateShareable:true, length:1000 }" selectedKey="{Header>/TripActivity}"
+						<ComboBox items="{ path:'/TripActivitiesSet', templateShareable:true }" selectedKey="{Header>/TripActivity}"
 							editable="{screenModels>/screenEditableVisible/GeneralEditable}" id="idTripActivity">
 							<c:ListItem key="{Id}" text="{Description}" />
+						</ComboBox>
+						<Label text="{i18n>project}" />
+						<ComboBox items="{ path:'/ProjectSet', templateShareable:true }" selectedKey="{Header>/Zzproje}"
+							editable="{screenModels>/screenEditableVisible/GeneralEditable}" id="idZzproje" visible="{= ${Header>/TripActivity} === 'G' }">
+							<c:ListItem key="{ProjeId}" text="{Proje}" />
 						</ComboBox>
 						<Label text="{i18n>startDate}" />
 						<DatePicker dateValue="{Header>/Departure}" editable="{screenModels>/screenEditableVisible/GeneralEditable}" id="idDeparture" />
@@ -70,14 +75,12 @@
 						<Label text="{i18n>country}" />
 						<Input value="{= ${Header>/CountryCode} ? ${Header>/CountryName} + ' (' + ${Header>/CountryCode} + ')' : ''}" valueHelpOnly="true" showValueHelp="true"
 							valueHelpRequest=".onValueHelpGeneral($event,'country')" editable="{screenModels>/screenEditableVisible/GeneralEditable}" id="idCountryCode" />
-						<!-- <Label text="{i18n>region}" visible="{/SeyahatBolgesi}" /> -->
 						<Label text="{i18n>region}" />
 						<Input value="{= ${Header>/RegionCode} ? ${Header>/RegionName} + ' (' + ${Header>/RegionCode} + ')' : ''}" valueHelpOnly="true" showValueHelp="true"
 							valueHelpRequest=".onValueHelpGeneral($event, 'region', ${Header>/CountryCode})" editable="{screenModels>/screenEditableVisible/GeneralEditable}"
 							id="idRegionCode" />
 						<Label text="{i18n>place}" />
 						<Input value="{Header>/LocationEnd}" editable="{screenModels>/screenEditableVisible/GeneralEditable}" maxLength="59" />
-						<!-- <Label text="{i18n>reasonText}" visible="{/SeyahatBolgesi}" /> -->
 						<Label text="{i18n>reasonText}" />
 						<TextArea value="{Header>/Note}" editable="{screenModels>/screenEditableVisible/GeneralEditable}" rows="3" maxLength="1024" showExceededText="true"
 							id="idNote" />
