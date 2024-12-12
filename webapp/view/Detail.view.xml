@@ -57,34 +57,36 @@
 					<!-- seyahat ayrıntıları -->
 					<form:SimpleForm title="{i18n>travelDetail}" layout="ResponsiveGridLayout" editable="true" emptySpanXL="6" emptySpanL="6" emptySpanM="4">
 						<Label text="{i18n>reason}" />
-						<Input value="{Header>/Purpose}" editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" id="idPurpose" />
+						<Input id="idPurpose" value="{Header>/Purpose}"
+							editable="{= ${screenModels>/generalEditable} &amp;&amp; (!${screenModels>/isGroupTravel} || ${screenModels>/isNewRequest}) }" />
 						<Label text="{i18n>purpose}" />
-						<ComboBox items="{ path:'/TripActivitiesSet', templateShareable:true }" selectedKey="{Header>/TripActivity}"
-							editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" id="idTripActivity">
+						<ComboBox id="idTripActivity" items="{ path:'/TripActivitiesSet', templateShareable:true }" selectedKey="{Header>/TripActivity}"
+							editable="{= ${screenModels>/generalEditable} &amp;&amp; (!${screenModels>/isGroupTravel} || ${screenModels>/isNewRequest}) }">
 							<c:ListItem key="{Id}" text="{Description}" />
 						</ComboBox>
 						<Label text="{i18n>project}" />
-						<ComboBox items="{ path:'/ProjectSet', templateShareable:true }" selectedKey="{Header>/Zzproje}"
-							editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" id="idZzproje"
-							visible="{= ${Header>/TripActivity} === 'G' }">
+						<ComboBox id="idZzproje" visible="{= ${Header>/TripActivity} === 'G' }" selectedKey="{Header>/Zzproje}"
+							items="{ path:'/ProjectSet', templateShareable:true }"
+							editable="{= ${screenModels>/generalEditable} &amp;&amp; (!${screenModels>/isGroupTravel} || ${screenModels>/isNewRequest}) }">
 							<c:ListItem key="{ProjeId}" text="{Proje}" />
 						</ComboBox>
 						<Label text="{i18n>startDate}" />
-						<DatePicker dateValue="{Header>/Departure}" editable="{screenModels>/generalEditable}" id="idDeparture" />
+						<DatePicker id="idDeparture" dateValue="{Header>/Departure}" editable="{screenModels>/generalEditable}" />
 						<Label text="{i18n>endDate}" />
-						<DatePicker dateValue="{Header>/Arrival}" editable="{screenModels>/generalEditable}" id="idArrival" />
+						<DatePicker id="idArrival" dateValue="{Header>/Arrival}" editable="{screenModels>/generalEditable}" />
 						<Label text="{i18n>country}" />
-						<Input value="{= ${Header>/CountryCode} ? ${Header>/CountryName} + ' (' + ${Header>/CountryCode} + ')' : ''}" valueHelpOnly="true" showValueHelp="true"
-							valueHelpRequest=".onValueHelpGeneral($event,'country')" editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }"
-							id="idCountryCode" />
+						<Input id="idCountryCode" value="{= ${Header>/CountryCode} ? ${Header>/CountryName} + ' (' + ${Header>/CountryCode} + ')' : ''}" valueHelpOnly="true"
+							showValueHelp="true" valueHelpRequest=".onValueHelpGeneral($event,'country')"
+							editable="{= ${screenModels>/generalEditable} &amp;&amp; (!${screenModels>/isGroupTravel} || ${screenModels>/isNewRequest}) }" />
 						<Label text="{i18n>region}" />
-						<Input value="{= ${Header>/RegionCode} ? ${Header>/RegionName} + ' (' + ${Header>/RegionCode} + ')' : ''}" valueHelpOnly="true" showValueHelp="true"
-							valueHelpRequest=".onValueHelpGeneral($event, 'region', ${Header>/CountryCode})"
-							editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" id="idRegionCode" />
+						<Input id="idRegionCode" value="{= ${Header>/RegionCode} ? ${Header>/RegionName} + ' (' + ${Header>/RegionCode} + ')' : ''}" valueHelpOnly="true"
+							showValueHelp="true" valueHelpRequest=".onValueHelpGeneral($event, 'region', ${Header>/CountryCode})"
+							editable="{= ${screenModels>/generalEditable} &amp;&amp; (!${screenModels>/isGroupTravel} || ${screenModels>/isNewRequest}) }" />
 						<Label text="{i18n>place}" />
-						<Input value="{Header>/LocationEnd}" editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" maxLength="59" />
+						<Input value="{Header>/LocationEnd}" maxLength="59"
+							editable="{= ${screenModels>/generalEditable} &amp;&amp; (!${screenModels>/isGroupTravel} || ${screenModels>/isNewRequest}) }" />
 						<Label text="{i18n>reasonText}" />
-						<TextArea value="{Header>/Note}" editable="{screenModels>/generalEditable}" rows="3" maxLength="1024" showExceededText="true" id="idNote" />
+						<TextArea id="idNote" value="{Header>/Note}" editable="{screenModels>/generalEditable}" rows="3" maxLength="1024" showExceededText="true" />
 					</form:SimpleForm>
 
 					<!-- avans girişi -->
@@ -118,7 +120,7 @@
 				</l:Grid>
 
 				<!-- katılımcı listesi -->
-				<Table fixedLayout="false" items="{UserList>/}" mode="MultiSelect" id="idUserList" class="sapUiMediumMarginBottom">
+				<Table fixedLayout="false" items="{UserList>/}" mode="{= ${screenModels>/isGroupTravel} ? 'MultiSelect' : 'None' }" id="idUserList" class="sapUiMediumMarginBottom">
 					<headerToolbar>
 						<OverflowToolbar>
 							<Title text="{i18n>USERLIST}" />
