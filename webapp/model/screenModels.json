@@ -3,6 +3,11 @@
     "isGroupTravel": false,
     "generalEditable": false,
     "detailPageTitle": "",
+    "additionalInfo": {
+        "selectedTag": "",
+        "title": "",
+        "iconSrc": ""
+    },
     "mandatoryFieldsCreateTravel": {
         "Purpose": "idPurpose",
         "TripActivity": "idTripActivity",

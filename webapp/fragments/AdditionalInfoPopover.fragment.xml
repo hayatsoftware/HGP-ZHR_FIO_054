@@ -1,0 +1,60 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.f" xmlns:card="sap.f.cards" xmlns:form="sap.ui.layout.form">
+    <ResponsivePopover showHeader="false" placement="Top">
+        <f:Card>
+            <f:header>
+                <card:Header title="{screenModels>/additionalInfo/title}" subtitle="{i18n>makeSureCorrect}" iconSrc="{screenModels>/additionalInfo/iconSrc}" />
+            </f:header>
+            <f:content>
+                <form:SimpleForm layout="ResponsiveGridLayout" editable="true">
+                    <!-- pasaport no -->
+                    <Label text="{i18n>passportId}" />
+                    <Input value="{UserList>ZzpasaportNo}" placeholder="Uxxxxxxxx" maxLength="9" editable="{screenModels>/generalEditable}"
+                        visible="{= ${screenModels>/additionalInfo/selectedTag} === 'passport' }" />
+
+                    <!-- pasaport türü -->
+                    <Label text="{i18n>passportType}" />
+                    <ComboBox selectedKey="{UserList>ZzpasaportTur}" items="{ path:'/PassportTypeSet', templateShareable:true }" editable="{screenModels>/generalEditable}"
+                        visible="{= ${screenModels>/additionalInfo/selectedTag} === 'passport' }">
+                        <core:ListItem key="{Id}" text="{Name}" />
+                    </ComboBox>
+
+                    <!-- pasaport geçerlilik tarihi -->
+                    <Label text="{i18n>passportValidDate}" />
+                    <DatePicker value="{ path:'UserList>ZzpasaportTarih', type:'sap.ui.model.type.Date', formatOptions:{ strictParsing:true, UTC:true } }"
+                        editable="{screenModels>/generalEditable}" visible="{= ${screenModels>/additionalInfo/selectedTag} === 'passport' }" />
+
+                    <!-- vize ihtiyacı -->
+                    <Label text="{i18n>visaRequirement}" />
+                    <ComboBox selectedKey="{UserList>ZzvizeIhtiyac}" items="{ path:'/VisaRequirementSet', templateShareable:true }" editable="{screenModels>/generalEditable}"
+                        visible="{= ${screenModels>/additionalInfo/selectedTag} === 'visa' }" selectionChange=".onRequirementSelectionChange">
+                        <core:ListItem key="{Id}" text="{Name}" />
+                    </ComboBox>
+
+                    <!-- uçuş ihtiyacı -->
+                    <Label text="{i18n>flightRequirement}" />
+                    <ComboBox selectedKey="{UserList>ZzucusIhtiyac}" items="{ path:'/FlightRequirementSet', templateShareable:true }" editable="{screenModels>/generalEditable}"
+                        visible="{= ${screenModels>/additionalInfo/selectedTag} === 'flight' }" selectionChange=".onRequirementSelectionChange">
+                        <core:ListItem key="{Id}" text="{Name}" />
+                    </ComboBox>
+
+                    <!-- uçuş ihtiyacı açıklama -->
+                    <Label text="{i18n>explanation}" />
+                    <TextArea value="{UserList>ZzucusIhtiyacAck}" editable="{screenModels>/generalEditable}" rows="3" maxLength="256" showExceededText="true"
+                        visible="{= ${screenModels>/additionalInfo/selectedTag} === 'flight' }" />
+
+                    <!-- otel ihtiyacı -->
+                    <Label text="{i18n>hotelRequirement}" />
+                    <ComboBox selectedKey="{UserList>ZzotelIhtiyac}" items="{ path:'/HotelRequirementSet', templateShareable:true }" editable="{screenModels>/generalEditable}"
+                        visible="{= ${screenModels>/additionalInfo/selectedTag} === 'hotel' }" selectionChange=".onRequirementSelectionChange">
+                        <core:ListItem key="{Id}" text="{Name}" />
+                    </ComboBox>
+
+                    <!-- otel ihtiyacı açıklama -->
+                    <Label text="{i18n>explanation}" />
+                    <TextArea value="{UserList>ZzotelIhtiyacAck}" editable="{screenModels>/generalEditable}" rows="3" maxLength="256" showExceededText="true"
+                        visible="{= ${screenModels>/additionalInfo/selectedTag} === 'hotel' }" />
+                </form:SimpleForm>
+            </f:content>
+        </f:Card>
+    </ResponsivePopover>
+</core:FragmentDefinition>

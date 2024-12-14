@@ -53,27 +53,29 @@
 		</s:footerMainAction>
 		<s:content>
 			<VBox fitContainer="true" class="sapFSemanticPageAlignContent">
-				<l:Grid defaultSpan="XL6 L6 M6 S12">
+				<l:Grid defaultSpan="XL6 L6 M12 S12">
 					<!-- seyahat ayrıntıları -->
 					<form:SimpleForm title="{i18n>travelDetail}" layout="ResponsiveGridLayout" editable="true" emptySpanXL="6" emptySpanL="6" emptySpanM="4">
 						<Label text="{i18n>reason}" />
 						<Input id="idPurpose" value="{Header>/Purpose}"
 							editable="{= ${screenModels>/generalEditable} &amp;&amp; (!${screenModels>/isGroupTravel} || ${screenModels>/isNewRequest}) }" />
 						<Label text="{i18n>purpose}" />
-						<ComboBox id="idTripActivity" items="{ path:'/TripActivitiesSet', templateShareable:true }" selectedKey="{Header>/TripActivity}"
+						<ComboBox width="100%" id="idTripActivity" items="{ path:'/TripActivitiesSet', templateShareable:true }" selectedKey="{Header>/TripActivity}"
 							editable="{= ${screenModels>/generalEditable} &amp;&amp; (!${screenModels>/isGroupTravel} || ${screenModels>/isNewRequest}) }">
 							<c:ListItem key="{Id}" text="{Description}" />
 						</ComboBox>
 						<Label text="{i18n>project}" />
-						<ComboBox id="idZzproje" visible="{= ${Header>/TripActivity} === 'G' }" selectedKey="{Header>/Zzproje}"
+						<ComboBox width="100%" id="idZzproje" visible="{= ${Header>/TripActivity} === 'G' }" selectedKey="{Header>/Zzproje}"
 							items="{ path:'/ProjectSet', templateShareable:true }"
 							editable="{= ${screenModels>/generalEditable} &amp;&amp; (!${screenModels>/isGroupTravel} || ${screenModels>/isNewRequest}) }">
 							<c:ListItem key="{ProjeId}" text="{Proje}" />
 						</ComboBox>
 						<Label text="{i18n>startDate}" />
-						<DatePicker id="idDeparture" dateValue="{Header>/Departure}" editable="{screenModels>/generalEditable}" />
+						<DatePicker id="idDeparture" value="{ path:'Header>/Departure', type:'sap.ui.model.type.Date', formatOptions:{ strictParsing:true, UTC:true } }"
+							editable="{screenModels>/generalEditable}" />
 						<Label text="{i18n>endDate}" />
-						<DatePicker id="idArrival" dateValue="{Header>/Arrival}" editable="{screenModels>/generalEditable}" />
+						<DatePicker id="idArrival" value="{ path:'Header>/Arrival', type:'sap.ui.model.type.Date', formatOptions:{ strictParsing:true, UTC:true } }"
+							editable="{screenModels>/generalEditable}" />
 						<Label text="{i18n>country}" />
 						<Input id="idCountryCode" value="{= ${Header>/CountryCode} ? ${Header>/CountryName} + ' (' + ${Header>/CountryCode} + ')' : ''}" valueHelpOnly="true"
 							showValueHelp="true" valueHelpRequest=".onValueHelpGeneral($event,'country')"
@@ -90,7 +92,7 @@
 					</form:SimpleForm>
 
 					<!-- avans girişi -->
-					<Table visible="{= !${screenModels>/isGroupTravel} }" fixedLayout="true" items="{EstimatedCostList>/}" mode="MultiSelect" id="idEstimatedCostList">
+					<Table visible="{= !${screenModels>/isGroupTravel} }" width="auto" fixedLayout="true" items="{EstimatedCostList>/}" mode="MultiSelect" id="idEstimatedCostList">
 						<headerToolbar>
 							<OverflowToolbar>
 								<Title text="{i18n>ESTIMATEDCOSTLIST}" />
@@ -109,7 +111,7 @@
 						<ColumnListItem>
 							<Input value="{ path:'EstimatedCostList>Value', type:'sap.ui.model.type.Float', formatOptions:{ decimals:2 } }" textAlign="End"
 								editable="{screenModels>/generalEditable}" />
-							<ComboBox selectedKey="{EstimatedCostList>Currency}" editable="{screenModels>/generalEditable}">
+							<ComboBox width="100%" selectedKey="{EstimatedCostList>Currency}" editable="{screenModels>/generalEditable}">
 								<c:ListItem key="TRY" text="TRY" />
 								<c:ListItem key="USD" text="USD" />
 								<c:ListItem key="EUR" text="EUR" />
@@ -120,7 +122,8 @@
 				</l:Grid>
 
 				<!-- katılımcı listesi -->
-				<Table fixedLayout="false" items="{UserList>/}" mode="{= ${screenModels>/isGroupTravel} ? 'MultiSelect' : 'None' }" id="idUserList" class="sapUiMediumMarginBottom">
+				<Table fixedLayout="false" items="{UserList>/}" mode="{= ${screenModels>/isGroupTravel} ? 'MultiSelect' : 'None' }" id="idUserList" width="auto"
+					class="sapUiMediumMarginBottom">
 					<headerToolbar>
 						<OverflowToolbar>
 							<Title text="{i18n>USERLIST}" />
@@ -137,6 +140,10 @@
 						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>COSTCENTER}" /></Column>
 						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>INTERNALORDER}" /></Column>
 						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>WBSELEMENT}" /></Column>
+						<Column demandPopin="true" minScreenWidth="Desktop"><Text text="{i18n>passportInfo}" /></Column>
+						<Column demandPopin="true" minScreenWidth="Desktop"><Text text="{i18n>visaInfo}" /></Column>
+						<Column demandPopin="true" minScreenWidth="Desktop"><Text text="{i18n>flightInfo}" /></Column>
+						<Column demandPopin="true" minScreenWidth="Desktop"><Text text="{i18n>hotelInfo}" /></Column>
 					</columns>
 					<ColumnListItem>
 						<VBox>
@@ -162,6 +169,26 @@
 							<Input value="{UserList>WbsElement}" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpGeneral($event,'wbselement')"
 								class="sapUiTinyMarginBottom" editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" />
 							<Label design="Bold" text="{UserList>WbsElementName}" />
+						</VBox>
+						<VBox>
+							<GenericTag text="{UserList>ZzpasaportNo}" press=".onAdditionalInfoTagPress($event, 'passport')" class="sapUiTinyMarginBottom"
+								status="{= ${UserList>ZzpasaportNo}.length > 0 ? 'Success' : 'None' }" />
+							<Label design="Bold" text="{i18n>clickTagForDetails}" />
+						</VBox>
+						<VBox>
+							<GenericTag text="{UserList>ZzvizeIhtiyacText}" press=".onAdditionalInfoTagPress($event, 'visa')" class="sapUiTinyMarginBottom"
+								status="{= ${UserList>ZzvizeIhtiyac}.length > 0 ? 'Success' : 'None' }" />
+							<Label design="Bold" text="{i18n>clickTagForDetails}" />
+						</VBox>
+						<VBox>
+							<GenericTag text="{UserList>ZzucusIhtiyacText}" press=".onAdditionalInfoTagPress($event, 'flight')" class="sapUiTinyMarginBottom"
+								status="{ path:'UserList>ZzucusIhtiyac', formatter:'.formatter.genericTagStatus' }" />
+							<Label design="Bold" text="{i18n>clickTagForDetails}" />
+						</VBox>
+						<VBox>
+							<GenericTag text="{UserList>ZzotelIhtiyacText}" press=".onAdditionalInfoTagPress($event, 'hotel')" class="sapUiTinyMarginBottom"
+								status="{ path:'UserList>ZzotelIhtiyac', formatter:'.formatter.genericTagStatus' }" />
+							<Label design="Bold" text="{i18n>clickTagForDetails}" />
 						</VBox>
 					</ColumnListItem>
 				</Table>

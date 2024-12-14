@@ -172,7 +172,41 @@ sap.ui.define([
 		},
 
 		onSaveCreateTravel: function () {
+			this.resetMessageModel();
 			this._saveCreateTravel(this._bNewRequest);
+		},
+
+		onAdditionalInfoTagPress: async function (oEvent, sSelectedTag) {
+			let oScreenModel = this.getModel("screenModels"),
+				oAdditionalInfo = this._getJsonData("/additionalInfo"),
+				oResourceBundle = this.getResourceBundle(),
+				mBindingProperties = {
+					model: "UserList",
+					path: oEvent.getSource().getBindingContext("UserList").getPath()
+				};
+
+			const mIconSrc = {
+				"passport": "sap-icon://business-card",
+				"visa": "sap-icon://notes",
+				"flight": "sap-icon://flight",
+				"hotel": "sap-icon://building"
+			};
+
+			oAdditionalInfo.selectedTag = sSelectedTag;
+			oAdditionalInfo.title = oResourceBundle.getText(sSelectedTag + "Info");
+			oAdditionalInfo.iconSrc = mIconSrc[sSelectedTag];
+			oScreenModel.setProperty("/additionalInfo", oAdditionalInfo);
+
+			let oPopover = await this.openPopover("idAdditionalInfoPopover", "com.hayat.grupseyahat.grupseyahattalebi.fragments.AdditionalInfoPopover", oEvent.getSource());
+			oPopover.bindElement(mBindingProperties);
+		},
+
+		onRequirementSelectionChange: function (oEvent) {
+			let oSelectedItem = oEvent.getParameter("selectedItem"),
+				oBindingKey = oEvent.getSource().getBinding("selectedKey"),
+				sBindingPath = oBindingKey.getContext().getPath() + "/" + oBindingKey.getPath() + "Text";
+
+			oBindingKey.getModel().setProperty(sBindingPath, oSelectedItem ? oSelectedItem.getText() : "");
 		}
 
 	});

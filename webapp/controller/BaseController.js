@@ -5,13 +5,16 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Filter",
     "sap/m/MessageBox",
-    "sap/ui/Device"
-], function (Controller, JSONModel, Fragment, FilterOperator, Filter, MessageBox, Device) {
+    "sap/ui/Device",
+    "../model/formatter"
+], function (Controller, JSONModel, Fragment, FilterOperator, Filter, MessageBox, Device, Formatter) {
     "use strict";
 
     var _oGlobalBusyDialog = new sap.m.BusyDialog();
 
     return Controller.extend("com.hayat.grupseyahat.grupseyahattalebi.controller.BaseController", {
+
+        formatter: Formatter,
 
         getModel: function (sName) {
             return this.getView().getModel(sName);
@@ -153,6 +156,37 @@ sap.ui.define([
 
         },
 
+        openPopover: function (sPopoverId, sFragmentName, oSource) {
+            return new Promise(async (fnResolve, fnReject) => {
+                let oView = this.getView(),
+                    oPopover = this.byId(sPopoverId),
+                    sContentDensityClass = this.getOwnerComponent().getContentDensityClass();
+
+                try {
+                    if (oPopover) {
+                        oPopover.openBy(oSource);
+
+                    } else {
+                        let mProperties = {
+                            id: oView.getId(),
+                            name: sFragmentName,
+                            controller: this
+                        };
+
+                        oPopover = await Fragment.load(mProperties);
+                        jQuery.sap.syncStyleClass(sContentDensityClass, oView, oPopover);
+                        oView.addDependent(oPopover);
+                        oPopover.openBy(oSource);
+                    }
+
+                    fnResolve(oPopover);
+
+                } catch (oException) {
+                    fnReject(oException);
+                }
+            });
+        },
+
         openDialog: function (sDialogId, sFragmentName) {
             return new Promise((fnResolve, fnReject) => {
                 var oView = this.getView(),
@@ -257,6 +291,7 @@ sap.ui.define([
                         oUserDetail.Pernr = oEmployeeDefaults.Pernr;
                         oUserDetail.FirstName = oEmployeeDefaults.FirstName;
                         oUserDetail.LastName = oEmployeeDefaults.LastName;
+                        oUserDetail.CompanyCode = oEmployeeDefaults.CompanyCode;
                         oUserDetail.Plans = oEmployeeDefaults.Plans;
                         oUserDetail.PlansText = oEmployeeDefaults.PlansText;
                         oUserDetail.CostCenter = oEmployeeDefaults.CostCenter;
@@ -570,6 +605,7 @@ sap.ui.define([
 
             } finally {
                 _oGlobalBusyDialog.close();
+                this._checkMessages();
             }
         },
 

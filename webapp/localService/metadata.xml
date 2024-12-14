@@ -135,8 +135,11 @@
                 <Key>
                     <PropertyRef Name="Username"/>
                 </Key>
+                <Property Name="ZzvizeIhtiyacText" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Kısa tanım" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="GrupSeyahatNo" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="GRUP_SEYAHAT_NO" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ZzucusIhtiyacText" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Kısa tanım" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Plans" Type="Edm.String" Nullable="false" MaxLength="8" sap:unicode="false" sap:label="Pozisyon" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ZzotelIhtiyacText" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:label="Kısa tanım" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Reinr" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Seyahat no." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="ZzpasaportNo" Type="Edm.String" Nullable="false" MaxLength="9" sap:unicode="false" sap:label="Pasaport Numarası" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="ZzucusIhtiyacAck" Type="Edm.String" Nullable="false" MaxLength="256" sap:unicode="false" sap:label="Text" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
