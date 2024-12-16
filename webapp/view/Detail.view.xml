@@ -1,6 +1,9 @@
 <mvc:View controllerName="com.hayat.grupseyahat.grupseyahattalebi.controller.Detail" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form"
 	xmlns:c="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:s="sap.f.semantic">
 	<s:SemanticPage busy="{appView>/busy}" busyIndicatorDelay="{appView>/delay}" showFooter="{screenModels>/generalEditable}">
+		<s:titleMainAction>
+			<s:TitleMainAction text="{i18n>print}" press=".onPrint" visible="{= +${Header>/Reinr} > 0 }" />
+		</s:titleMainAction>
 		<s:titleExpandedHeading>
 			<Title text="{screenModels>/detailPageTitle}" />
 		</s:titleExpandedHeading>

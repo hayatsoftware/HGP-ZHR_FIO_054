@@ -1,7 +1,8 @@
 sap.ui.define([
 	"./BaseController",
 	"sap/ui/model/json/JSONModel",
-], function (BaseController, JSONModel) {
+	"sap/m/PDFViewer"
+], function (BaseController, JSONModel, PDFViewer) {
 	"use strict";
 
 	var _oGlobalBusyDialog = new sap.m.BusyDialog();
@@ -207,6 +208,23 @@ sap.ui.define([
 				sBindingPath = oBindingKey.getContext().getPath() + "/" + oBindingKey.getPath() + "Text";
 
 			oBindingKey.getModel().setProperty(sBindingPath, oSelectedItem ? oSelectedItem.getText() : "");
+		},
+
+		onPrint: function () {
+			let oModel = this.getModel(),
+				sRequestNumber = this.getModel("Header").getProperty("/Reinr");
+
+			let sPath = oModel.createKey("/TravelFormSet", {
+				Reinr: sRequestNumber
+			});
+
+			let oPDFViewer = new PDFViewer({
+				isTrustedSource: true,
+				source: oModel.sServiceUrl + sPath + "/$value",
+				title: +sRequestNumber
+			});
+
+			oPDFViewer.open();
 		}
 
 	});

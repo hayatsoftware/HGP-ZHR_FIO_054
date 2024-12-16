@@ -108,16 +108,16 @@ sap.ui.define([
 
             switch (sType) {
                 case "country":
-                    sModel = "/CountriesSet"
+                    sModel = "/CountriesSet";
                     sDialogId = "idCountrySH";
                     sTitle = this._getText("countrySHTitle");
                     break;
 
                 case "region":
-                    sModel = "/RegionSet"
+                    sModel = "/RegionSet";
                     sDialogId = "idRegionSH";
                     sTitle = this._getText("regionSHTitle");
-                    aFilter.push(new Filter("CountryID", FilterOperator.EQ, sFilterParam))
+                    aFilter.push(new Filter("CountryID", FilterOperator.EQ, sFilterParam));
                     break;
 
                 case "costcenter":
