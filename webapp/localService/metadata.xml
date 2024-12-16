@@ -203,8 +203,9 @@
                 <Key>
                     <PropertyRef Name="Uname"/>
                 </Key>
-                <Property Name="Pernr" Type="Edm.String" Nullable="false" MaxLength="8" sap:unicode="false" sap:label="Personel no." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CashEditable" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Boole değişkeni (X= doğru, -= yanlış, boşluk= bilinmiyor)" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="GroupAuth" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Boole değişkeni (X= doğru, -= yanlış, boşluk= bilinmiyor)" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Pernr" Type="Edm.String" Nullable="false" MaxLength="8" sap:unicode="false" sap:label="Personel no." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Uname" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Kullanıcı adı" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
             </EntityType>
             <EntityType Name="TravelForm" m:HasStream="true" sap:content-version="1">

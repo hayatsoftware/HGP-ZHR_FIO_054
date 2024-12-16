@@ -550,6 +550,20 @@ sap.ui.define([
                 return;
             }
 
+            // yurtdışı seyahatleri pasaport, vize, uçuş ve otel bilgileri kontrolleri
+            if (oHeader.CountryCode !== "TR") {
+                aItem.forEach(oItem => {
+                    if (!oItem.ZzpasaportNo || !oItem.ZzpasaportNo || !oItem.ZzpasaportTur || !oItem.ZzpasaportTarih || !oItem.ZzvizeIhtiyac || !oItem.ZzucusIhtiyac || !oItem.ZzucusIhtiyacAck || !oItem.ZzotelIhtiyac || !oItem.ZzotelIhtiyacAck) {
+                        bError = true;
+                    }
+                });
+            }
+
+            if (bError) {
+                MessageBox.error(this._getText("MANDPASSVISA"));
+                return;
+            }
+
             MessageBox.confirm(this._getText("createTravelTitle"), {
                 onClose: (oAction) => {
                     if (oAction === MessageBox.Action.OK) {

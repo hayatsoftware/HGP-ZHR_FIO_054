@@ -109,7 +109,7 @@
 						<columns>
 							<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>AMOUNT}" /></Column>
 							<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>CURRENCY}" /></Column>
-							<Column demandPopin="true" minScreenWidth="Tablet" hAlign="Center"><Text text="{i18n>KASSA}" /></Column>
+							<Column demandPopin="true" minScreenWidth="Tablet" hAlign="Center" visible="{appView>/cashAdvanceAuth}"><Text text="{i18n>KASSA}" /></Column>
 						</columns>
 						<ColumnListItem>
 							<Input value="{ path:'EstimatedCostList>Value', type:'sap.ui.model.type.Float', formatOptions:{ decimals:2 } }" textAlign="End"

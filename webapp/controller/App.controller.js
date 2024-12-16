@@ -13,6 +13,7 @@ sap.ui.define([
 			oViewModel = new JSONModel({
 				busy: true,
 				delay: 0,
+				cashAdvanceAuth: true,
 				groupAuth: false,
 				layout: "OneColumn",
 				previousLayout: "",
@@ -51,6 +52,7 @@ sap.ui.define([
 				let mParameters = {
 					success: (oResult) => {
 						oViewModel.setProperty("/groupAuth", oResult.GroupAuth);
+						oViewModel.setProperty("/cashAdvanceAuth", oResult.CashEditable);
 					}
 				};
 
