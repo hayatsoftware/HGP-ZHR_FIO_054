@@ -15,6 +15,7 @@
         "Arrival": "idArrival",
         "CountryCode": "idCountryCode",
         "RegionCode": "idRegionCode",
+        "LocationEnd": "idLocationEnd",
         "Note": "idNote"
     },
     "travelHeader": {

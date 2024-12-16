@@ -522,27 +522,25 @@ sap.ui.define([
                 sValueState = "",
                 bError = false;
 
-            if (bCreate) {
-                for (var i in oMandatoryFields) {
-                    if (!!oHeader[i] === false) {
-                        bError = true;
-                        sValueState = "Error";
-                    } else {
-                        sValueState = "None";
-                    }
-
-                    this.getView().byId(oMandatoryFields[i]).setValueState(sValueState);
-                }
-
-                if (oHeader.TripActivity === "G" && !oHeader.Zzproje) {
-                    this.getView().byId("idZzproje").setValueState(sValueState);
+            for (var i in oMandatoryFields) {
+                if (!!oHeader[i] === false) {
                     bError = true;
+                    sValueState = "Error";
+                } else {
+                    sValueState = "None";
                 }
 
-                if (bError) {
-                    MessageBox.error(this._getText("MANDFIELDS"));
-                    return;
-                }
+                this.getView().byId(oMandatoryFields[i]).setValueState(sValueState);
+            }
+
+            if (oHeader.TripActivity === "G" && !oHeader.Zzproje) {
+                this.getView().byId("idZzproje").setValueState(sValueState);
+                bError = true;
+            }
+
+            if (bError) {
+                MessageBox.error(this._getText("MANDFIELDS"));
+                return;
             }
 
             if (bNewRequest && oHeader.Grup && aItem.length === 0) {
@@ -553,7 +551,7 @@ sap.ui.define([
             // yurtdışı seyahatleri pasaport, vize, uçuş ve otel bilgileri kontrolleri
             if (oHeader.CountryCode !== "TR") {
                 aItem.forEach(oItem => {
-                    if (!oItem.ZzpasaportNo || !oItem.ZzpasaportNo || !oItem.ZzpasaportTur || !oItem.ZzpasaportTarih || !oItem.ZzvizeIhtiyac || !oItem.ZzucusIhtiyac || !oItem.ZzucusIhtiyacAck || !oItem.ZzotelIhtiyac || !oItem.ZzotelIhtiyacAck) {
+                    if (!oItem.ZzpasaportNo || !oItem.ZzpasaportNo || !oItem.ZzpasaportTur || !oItem.ZzpasaportTarih || !oItem.ZzvizeIhtiyac || !oItem.ZzucusIhtiyac || !oItem.ZzotelIhtiyac) {
                         bError = true;
                     }
                 });

@@ -88,7 +88,7 @@
 							showValueHelp="true" valueHelpRequest=".onValueHelpGeneral($event, 'region', ${Header>/CountryCode})"
 							editable="{= ${screenModels>/generalEditable} &amp;&amp; (!${screenModels>/isGroupTravel} || ${screenModels>/isNewRequest}) }" />
 						<Label text="{i18n>place}" />
-						<Input value="{Header>/LocationEnd}" maxLength="59"
+						<Input id="idLocationEnd" value="{Header>/LocationEnd}" maxLength="59"
 							editable="{= ${screenModels>/generalEditable} &amp;&amp; (!${screenModels>/isGroupTravel} || ${screenModels>/isNewRequest}) }" />
 						<Label text="{i18n>reasonText}" />
 						<TextArea id="idNote" value="{Header>/Note}" editable="{screenModels>/generalEditable}" rows="3" maxLength="1024" showExceededText="true" />
