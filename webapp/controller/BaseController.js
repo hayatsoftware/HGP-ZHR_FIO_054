@@ -298,6 +298,7 @@ sap.ui.define([
                         oUserDetail.CostCenterName = oEmployeeDefaults.CostCenterName;
                         oUserDetail.InternalOrder = oEmployeeDefaults.InternalOrder;
                         oUserDetail.InternalOrderName = oEmployeeDefaults.InternalOrderName;
+                        this.getView().getModel("UserList").setProperty("/0", oUserDetail);
                     }
 
                     break;
