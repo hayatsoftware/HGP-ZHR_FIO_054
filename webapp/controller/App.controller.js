@@ -11,6 +11,7 @@ sap.ui.define([
 				iOriginalBusyDelay = this.getView().getBusyIndicatorDelay();
 
 			oViewModel = new JSONModel({
+				postResponse: null,
 				busy: true,
 				delay: 0,
 				cashAdvanceAuth: true,

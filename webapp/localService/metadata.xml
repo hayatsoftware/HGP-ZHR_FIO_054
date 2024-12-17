@@ -163,6 +163,7 @@
                 <Property Name="InternalOrderName" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Tanım" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="ControllingArea" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Ayrt.tanımlanmamış alan, muhtemelen yama dzy.kullanılabilir" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <NavigationProperty Name="ESTIMATEDCOSTSET" Relationship="ZHR_PROJ_041_SRV.Item_to_Cost" FromRole="FromRole_Item_to_Cost" ToRole="ToRole_Item_to_Cost"/>
+                <NavigationProperty Name="ATTACHMENTSET" Relationship="ZHR_PROJ_041_SRV.Item_to_Attachment" FromRole="FromRole_Item_to_Attachment" ToRole="ToRole_Item_to_Attachment"/>
             </EntityType>
             <EntityType Name="MessageReturn" sap:content-version="1">
                 <Key>
@@ -252,13 +253,14 @@
                 <Property Name="ProjeId" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Ayrt.tanımlanmamış alan, muhtemelen yama dzy.kullanılabilir" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Proje" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="40 karakter uzunluğundaki metin" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
             </EntityType>
-            <EntityType Name="Attachment" sap:content-version="1">
+            <EntityType Name="Attachment" m:HasStream="true" sap:content-version="1">
                 <Key>
                     <PropertyRef Name="Type"/>
                     <PropertyRef Name="AttachmentId"/>
                     <PropertyRef Name="Pernr"/>
                     <PropertyRef Name="Reinr"/>
                 </Key>
+                <Property Name="TypeText" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Type" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="AttachmentId" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Filename" Type="Edm.String" Nullable="false" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
@@ -266,9 +268,20 @@
                 <Property Name="Pernr" Type="Edm.String" Nullable="false" MaxLength="8" sap:unicode="false" sap:label="Personel no." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Reinr" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Seyahat no." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
             </EntityType>
+            <EntityType Name="AttachmentType" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Versiyon numarası bileşenleri" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="40 karakter uzunluğundaki metin" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
             <Association Name="Item_to_Cost" sap:content-version="1">
                 <End Type="ZHR_PROJ_041_SRV.TravelItem" Multiplicity="1" Role="FromRole_Item_to_Cost"/>
                 <End Type="ZHR_PROJ_041_SRV.EstimatedCost" Multiplicity="*" Role="ToRole_Item_to_Cost"/>
+            </Association>
+            <Association Name="Item_to_Attachment" sap:content-version="1">
+                <End Type="ZHR_PROJ_041_SRV.TravelItem" Multiplicity="1" Role="FromRole_Item_to_Attachment"/>
+                <End Type="ZHR_PROJ_041_SRV.Attachment" Multiplicity="*" Role="ToRole_Item_to_Attachment"/>
             </Association>
             <Association Name="Travelt_to_Return" sap:content-version="1">
                 <End Type="ZHR_PROJ_041_SRV.Travel" Multiplicity="1" Role="FromRole_Travelt_to_Return"/>
@@ -301,6 +314,11 @@
                 <EntitySet Name="PassportTypeSet" EntityType="ZHR_PROJ_041_SRV.PassportType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="ProjectSet" EntityType="ZHR_PROJ_041_SRV.Project" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="AttachmentSet" EntityType="ZHR_PROJ_041_SRV.Attachment" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="AttachmentTypeSet" EntityType="ZHR_PROJ_041_SRV.AttachmentType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <AssociationSet Name="Item_to_AttachmentSet" Association="ZHR_PROJ_041_SRV.Item_to_Attachment" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="TravelItemSet" Role="FromRole_Item_to_Attachment"/>
+                    <End EntitySet="AttachmentSet" Role="ToRole_Item_to_Attachment"/>
+                </AssociationSet>
                 <AssociationSet Name="Travel_To_ItemSet" Association="ZHR_PROJ_041_SRV.Travel_To_Item" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="TravelSet" Role="FromRole_Travel_To_Item"/>
                     <End EntitySet="TravelItemSet" Role="ToRole_Travel_To_Item"/>

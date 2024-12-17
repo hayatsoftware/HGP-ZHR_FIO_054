@@ -612,6 +612,9 @@ sap.ui.define([
                 });
 
                 if (oDeepData.Grup || !bHasError) {
+                    this.getModel("appView").setProperty("/postResponse", oResponse);
+                    this.byId("idUploadCollection").upload();
+
                     let bReplace = !Device.system.phone;
                     this.getRouter().navTo("list", {}, bReplace);
                 }

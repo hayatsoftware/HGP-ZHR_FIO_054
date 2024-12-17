@@ -1,8 +1,9 @@
 sap.ui.define([
 	"./BaseController",
 	"sap/ui/model/json/JSONModel",
-	"sap/m/PDFViewer"
-], function (BaseController, JSONModel, PDFViewer) {
+	"sap/m/PDFViewer",
+	"sap/m/UploadCollectionParameter"
+], function (BaseController, JSONModel, PDFViewer, UploadCollectionParameter) {
 	"use strict";
 
 	var _oGlobalBusyDialog = new sap.m.BusyDialog();
@@ -26,6 +27,8 @@ sap.ui.define([
 
 		_onDetailObjectMatched: function (oEvent) {
 			this._bNewRequest = false;
+			this._aPendingUploaderParameters = [];
+
 			var sReinr = oEvent.getParameter("arguments").Reinr,
 				sGrupSeyahatNo = oEvent.getParameter("arguments").GrupSeyahatNo,
 				bGroupTravel = !!+sGrupSeyahatNo;
@@ -44,6 +47,8 @@ sap.ui.define([
 
 		_onCreateTravelObjectMatched: function () {
 			this._bNewRequest = true;
+			this._aPendingUploaderParameters = [];
+
 			let oScreenModel = this.getModel("screenModels");
 			oScreenModel.setProperty("/generalEditable", true);
 			oScreenModel.setProperty("/isNewRequest", true);
@@ -92,6 +97,7 @@ sap.ui.define([
 
 			this.getView().setModel(new JSONModel(aUserList), "UserList");
 			this.getView().setModel(new JSONModel(aEstimatedCostList), "EstimatedCostList");
+			this.getView().setModel(new JSONModel([]), "AttachmentList");
 		},
 
 		_getData: async function (sReinr, sGrupSeyahatNo) {
@@ -101,24 +107,30 @@ sap.ui.define([
 			});
 
 			var mUrlParameters = {
-				$expand: "TRAVELITEMSET/ESTIMATEDCOSTSET"
+				$expand: "TRAVELITEMSET/ESTIMATEDCOSTSET,TRAVELITEMSET/ATTACHMENTSET"
 			};
 
 			try {
 				_oGlobalBusyDialog.open();
 				var oTravelRequest = await this._sendReadData(sPath, mUrlParameters),
-					aEstimatedCostList = [];
+					aEstimatedCostList = [],
+					aAttachmentList = [];
 
 				oTravelRequest.TRAVELITEMSET.results.forEach(oTravelItem => {
 					oTravelItem.NonEditable = true;
 					oTravelItem.ESTIMATEDCOSTSET.results.forEach(oCost => {
 						aEstimatedCostList.push(oCost);
 					});
+
+					oTravelItem.ATTACHMENTSET.results.forEach(oAttachment => {
+						aAttachmentList.push(oAttachment);
+					});
 				});
 
 				this.getView().setModel(new JSONModel(oTravelRequest), "Header");
 				this.getView().setModel(new JSONModel(oTravelRequest.TRAVELITEMSET.results), "UserList");
 				this.getView().setModel(new JSONModel(aEstimatedCostList), "EstimatedCostList");
+				this.getView().setModel(new JSONModel(aAttachmentList), "AttachmentList");
 
 			} finally {
 				_oGlobalBusyDialog.close();
@@ -225,6 +237,96 @@ sap.ui.define([
 			});
 
 			oPDFViewer.open();
+		},
+
+		/* ============================================================= */
+		/* Doküman işlemleri											 */
+		/* ============================================================= */
+		onUploadChange: function (oEvent) {
+			let oScreenModel = this.getModel("screenModels"),
+				oHeader = this.getModel("Header").getData(),
+				aUserList = this.getModel("UserList").getData();
+
+			oScreenModel.setProperty("/selectedDocument/PernrEditable", oHeader.Grup);
+			oScreenModel.setProperty("/selectedDocument/Pernr", oHeader.Grup ? "" : aUserList[0].Pernr);
+			oScreenModel.setProperty("/selectedDocument/Type", "");
+
+			this._oUploader = oEvent.getSource()._oFileUploader;
+			this.openDialog("documentInfoDialog", "com.hayat.grupseyahat.grupseyahattalebi.fragments.DocumentInfoDialog");
+		},
+
+		onBeforeUploadStarts: function (oEvent) {
+			let oRequestParam = oEvent.getParameters().getHeaderParameter().find(_oParam => _oParam.getName().includes("requestId"));
+			let oFileUploader = oEvent.getSource()._aFileUploadersForPendingUpload.find(_oUploader => {
+				return _oUploader.getHeaderParameters().find(_oParam => _oParam.getName() === oRequestParam.getName() && _oParam.getValue() === oRequestParam.getValue());
+			});
+
+			let oHeaderParameter = this._aPendingUploaderParameters.find(_oParam => _oParam.Id === oFileUploader.getId()),
+				oAppModel = this.getModel("appView");
+
+			oHeaderParameter.Reinr = oAppModel.getProperty("/postResponse/TRAVELITEMSET/results").find(_oItem => _oItem.Pernr = oHeaderParameter.Pernr).Reinr;
+
+			let oModel = this.getModel();
+			oModel.refreshSecurityToken();
+			let sCSRF = oModel.getHeaders()["x-csrf-token"];
+
+			let oCSRFTokenParameter = new UploadCollectionParameter({
+				name: "x-csrf-token",
+				value: sCSRF
+			});
+
+			let oFilenameParameter = new UploadCollectionParameter({
+				name: "slug",
+				value: btoa(encodeURIComponent(oEvent.getParameter("fileName")))
+			});
+
+			let oTravelNumberParameter = new UploadCollectionParameter({
+				name: "reinr",
+				value: oHeaderParameter.Reinr
+			});
+
+			let oPersonnelNumberParameter = new UploadCollectionParameter({
+				name: "pernr",
+				value: oHeaderParameter.Pernr
+			});
+
+			let oDocumentTypeParameter = new UploadCollectionParameter({
+				name: "type",
+				value: oHeaderParameter.Type
+			});
+
+			oEvent.getParameters().addHeaderParameter(oCSRFTokenParameter);
+			oEvent.getParameters().addHeaderParameter(oFilenameParameter);
+			oEvent.getParameters().addHeaderParameter(oTravelNumberParameter);
+			oEvent.getParameters().addHeaderParameter(oPersonnelNumberParameter);
+			oEvent.getParameters().addHeaderParameter(oDocumentTypeParameter);
+		},
+
+		onUploadComplete: function () {
+			let oAppModel = this.getModel("appView");
+			oAppModel.setProperty("/postResponse", null);
+		},
+
+		onCloseDialogDocumentInfo: function () {
+			let oSelectedDocument = this._getJsonData("/selectedDocument");
+
+			if (!oSelectedDocument.Pernr || !oSelectedDocument.Type) {
+				this.openDialog("documentInfoDialog", "com.hayat.grupseyahat.grupseyahattalebi.fragments.DocumentInfoDialog");
+			}
+		},
+
+		onSaveDocumentInfo: function (oEvent) {
+			let oSelectedDocument = this._getJsonData("/selectedDocument");
+
+			if (oSelectedDocument.Pernr && oSelectedDocument.Type) {
+				this._aPendingUploaderParameters.push({
+					Id: this._oUploader.getId(),
+					Pernr: oSelectedDocument.Pernr,
+					Type: oSelectedDocument.Type
+				});
+			}
+
+			oEvent.getSource().getParent().close();
 		}
 
 	});

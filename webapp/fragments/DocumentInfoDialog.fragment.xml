@@ -1,0 +1,20 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
+    <Dialog title="{i18n>documentInfo}" afterClose=".onCloseDialogDocumentInfo">
+        <f:SimpleForm editable="true" layout="ResponsiveGridLayout">
+            <f:content>
+                <Label text="{i18n>PERSONNEL}" />
+                <ComboBox items="{ path:'UserList>/', templateShareable:true }" selectedKey="{screenModels>/selectedDocument/Pernr}"
+                    editable="{screenModels>/selectedDocument/PernrEditable}" showSecondaryValues="true">
+                    <core:ListItem key="{UserList>Pernr}" text="{UserList>FirstName} {UserList>LastName}" additionalText="{UserList>Pernr}" />
+                </ComboBox>
+                <Label text="{i18n>documentType}" />
+                <ComboBox items="{ path:'/AttachmentTypeSet', templateShareable:true }" selectedKey="{screenModels>/selectedDocument/Type}">
+                    <core:ListItem key="{Id}" text="{Name}" />
+                </ComboBox>
+            </f:content>
+        </f:SimpleForm>
+        <endButton>
+            <Button text="{i18n>continue}" type="Emphasized" press=".onSaveDocumentInfo" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

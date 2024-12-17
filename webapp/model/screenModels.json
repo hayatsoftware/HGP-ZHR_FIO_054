@@ -8,6 +8,11 @@
         "title": "",
         "iconSrc": ""
     },
+    "selectedDocument": {
+        "PernrEditable": true,
+        "Pernr": "",
+        "Type": ""
+    },
     "mandatoryFieldsCreateTravel": {
         "Purpose": "idPurpose",
         "TripActivity": "idTripActivity",

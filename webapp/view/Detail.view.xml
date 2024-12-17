@@ -125,7 +125,7 @@
 				</l:Grid>
 
 				<!-- katılımcı listesi -->
-				<Table fixedLayout="false" items="{UserList>/}" mode="{= ${screenModels>/isGroupTravel} ? 'MultiSelect' : 'None' }" id="idUserList" width="auto"
+				<Table fixedLayout="true" items="{UserList>/}" mode="{= ${screenModels>/isGroupTravel} ? 'MultiSelect' : 'None' }" id="idUserList" width="auto"
 					class="sapUiMediumMarginBottom">
 					<headerToolbar>
 						<OverflowToolbar>
@@ -152,49 +152,65 @@
 						<VBox>
 							<Input value="{UserList>Pernr}" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onUserSearchHelp" class="sapUiTinyMarginBottom"
 								editable="{= ${screenModels>/generalEditable} &amp;&amp; ${screenModels>/isGroupTravel} &amp;&amp; !${UserList>NonEditable} }" />
-							<Label design="Bold" text="{UserList>FirstName} {UserList>LastName}" />
+							<Label design="Bold" text="{UserList>FirstName} {UserList>LastName}" tooltip="{UserList>FirstName} {UserList>LastName}" />
 						</VBox>
 						<VBox>
 							<Input value="{UserList>Plans}" class="sapUiTinyMarginBottom" editable="false" />
-							<Label design="Bold" text="{UserList>PlansText}" />
+							<Label design="Bold" text="{UserList>PlansText}" tooltip="{UserList>PlansText}" />
 						</VBox>
 						<VBox>
 							<Input value="{UserList>CostCenter}" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpGeneral($event,'costcenter')"
 								class="sapUiTinyMarginBottom" editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" />
-							<Label design="Bold" text="{UserList>CostCenterName}" />
+							<Label design="Bold" text="{UserList>CostCenterName}" tooltip="{UserList>CostCenterName}" />
 						</VBox>
 						<VBox>
 							<Input value="{UserList>InternalOrder}" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpGeneral($event,'internalorder')"
 								class="sapUiTinyMarginBottom" editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" />
-							<Label design="Bold" text="{UserList>InternalOrderName}" />
+							<Label design="Bold" text="{UserList>InternalOrderName}" tooltip="{UserList>InternalOrderName}" />
 						</VBox>
 						<VBox>
 							<Input value="{UserList>WbsElement}" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpGeneral($event,'wbselement')"
 								class="sapUiTinyMarginBottom" editable="{= ${screenModels>/generalEditable} &amp;&amp; !${screenModels>/isGroupTravel} }" />
-							<Label design="Bold" text="{UserList>WbsElementName}" />
+							<Label design="Bold" text="{UserList>WbsElementName}" tooltip="{UserList>WbsElementName}" />
 						</VBox>
 						<VBox>
-							<GenericTag text="{UserList>ZzpasaportNo}" press=".onAdditionalInfoTagPress($event, 'passport')" class="sapUiTinyMarginBottom"
-								status="{= ${UserList>ZzpasaportNo}.length > 0 ? 'Success' : 'None' }" />
-							<Label design="Bold" text="{i18n>clickTagForDetails}" />
+							<GenericTag text="{UserList>ZzpasaportNo}" tooltip="{UserList>ZzpasaportNo}" press=".onAdditionalInfoTagPress($event, 'passport')"
+								class="sapUiTinyMarginBottom" status="{= ${UserList>ZzpasaportNo}.length > 0 ? 'Success' : 'None' }" />
+							<Label design="Bold" text="{i18n>clickTagForDetails}" tooltip="{i18n>clickTagForDetails}" />
 						</VBox>
 						<VBox>
-							<GenericTag text="{UserList>ZzvizeIhtiyacText}" press=".onAdditionalInfoTagPress($event, 'visa')" class="sapUiTinyMarginBottom"
-								status="{= ${UserList>ZzvizeIhtiyac}.length > 0 ? 'Success' : 'None' }" />
-							<Label design="Bold" text="{i18n>clickTagForDetails}" />
+							<GenericTag text="{UserList>ZzvizeIhtiyacText}" tooltip="{UserList>ZzvizeIhtiyacText}" press=".onAdditionalInfoTagPress($event, 'visa')"
+								class="sapUiTinyMarginBottom" status="{= ${UserList>ZzvizeIhtiyac}.length > 0 ? 'Success' : 'None' }" />
+							<Label design="Bold" text="{i18n>clickTagForDetails}" tooltip="{i18n>clickTagForDetails}" />
 						</VBox>
 						<VBox>
-							<GenericTag text="{UserList>ZzucusIhtiyacText}" press=".onAdditionalInfoTagPress($event, 'flight')" class="sapUiTinyMarginBottom"
-								status="{ path:'UserList>ZzucusIhtiyac', formatter:'.formatter.genericTagStatus' }" />
-							<Label design="Bold" text="{i18n>clickTagForDetails}" />
+							<GenericTag text="{UserList>ZzucusIhtiyacText}" tooltip="{UserList>ZzucusIhtiyacText}" press=".onAdditionalInfoTagPress($event, 'flight')"
+								class="sapUiTinyMarginBottom" status="{ path:'UserList>ZzucusIhtiyac', formatter:'.formatter.genericTagStatus' }" />
+							<Label design="Bold" text="{i18n>clickTagForDetails}" tooltip="{i18n>clickTagForDetails}" />
 						</VBox>
 						<VBox>
-							<GenericTag text="{UserList>ZzotelIhtiyacText}" press=".onAdditionalInfoTagPress($event, 'hotel')" class="sapUiTinyMarginBottom"
-								status="{ path:'UserList>ZzotelIhtiyac', formatter:'.formatter.genericTagStatus' }" />
-							<Label design="Bold" text="{i18n>clickTagForDetails}" />
+							<GenericTag text="{UserList>ZzotelIhtiyacText}" tooltip="{UserList>ZzotelIhtiyacText}" press=".onAdditionalInfoTagPress($event, 'hotel')"
+								class="sapUiTinyMarginBottom" status="{ path:'UserList>ZzotelIhtiyac', formatter:'.formatter.genericTagStatus' }" />
+							<Label design="Bold" text="{i18n>clickTagForDetails}" tooltip="{i18n>clickTagForDetails}" />
 						</VBox>
 					</ColumnListItem>
 				</Table>
+
+				<!-- ekler -->
+				<UploadCollection id="idUploadCollection" items="{AttachmentList>/}" uploadUrl="/sap/opu/odata/sap/ZHR_PROJ_041_SRV/AttachmentSet" instantUpload="false"
+					uploadButtonInvisible="{= !${screenModels>/generalEditable} }" change=".onUploadChange" beforeUploadStarts=".onBeforeUploadStarts"
+					uploadComplete=".onUploadComplete" class="sapUiMediumMarginBottom">
+					<items>
+						<UploadCollectionItem documentId="{AttachmentList>AttachmentId}" fileName="{AttachmentList>Filename}" mimeType="{AttachmentList>Mimetype}"
+							url="/sap/opu/odata/sap/ZHR_PROJ_041_SRV/AttachmentSet(Pernr='{AttachmentList>Pernr}',Reinr='{AttachmentList>Reinr}',Type='{AttachmentList>Type}',AttachmentId='{AttachmentList>AttachmentId}')/$value"
+							visibleDelete="false" visibleEdit="false">
+							<attributes>
+								<ObjectAttribute title="{i18n>PERNR}" text="{AttachmentList>Pernr}" />
+								<ObjectAttribute title="{i18n>documentType}" text="{AttachmentList>TypeText}" />
+							</attributes>
+						</UploadCollectionItem>
+					</items>
+				</UploadCollection>
 			</VBox>
 		</s:content>
 	</s:SemanticPage>
