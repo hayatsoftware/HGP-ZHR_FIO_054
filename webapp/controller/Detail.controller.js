@@ -185,6 +185,8 @@ sap.ui.define([
 		},
 
 		onSaveCreateTravel: function () {
+			this.getView().setModel(new JSONModel(this._aPendingUploaderParameters), "PendingUploadList");
+
 			this.resetMessageModel();
 			this._saveCreateTravel(this._bNewRequest);
 		},

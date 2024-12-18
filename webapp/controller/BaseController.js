@@ -519,46 +519,69 @@ sap.ui.define([
                 bNewRequest = this._getJsonData("/isNewRequest"),
                 oHeader = this.getView().getModel("Header").getData(),
                 aItem = this.getView().getModel("UserList").getData(),
+                aAttachmentList = this.getView().getModel("AttachmentList").getData(),
+                aPendingUploadList = this.getView().getModel("PendingUploadList").getData(),
                 sValueState = "",
                 bError = false;
 
-            for (var i in oMandatoryFields) {
-                if (!!oHeader[i] === false) {
-                    bError = true;
-                    sValueState = "Error";
-                } else {
-                    sValueState = "None";
+            try {
+                // zorunlu alan kontrolleri
+                for (var i in oMandatoryFields) {
+                    if (!!oHeader[i] === false) {
+                        sValueState = "Error";
+                        bError = true;
+                    } else {
+                        sValueState = "None";
+                    }
+
+                    this.getView().byId(oMandatoryFields[i]).setValueState(sValueState);
                 }
 
-                this.getView().byId(oMandatoryFields[i]).setValueState(sValueState);
-            }
+                if (bError) {
+                    throw new Error(this._getText("MANDFIELDS"));
+                }
 
-            if (oHeader.TripActivity === "G" && !oHeader.Zzproje) {
-                this.getView().byId("idZzproje").setValueState(sValueState);
-                bError = true;
-            }
+                // proje seçim kontrolü
+                if (oHeader.TripActivity === "G" && !oHeader.Zzproje) {
+                    this.getView().byId("idZzproje").setValueState(sValueState);
+                    throw new Error(this._getText("MANDFIELDS"));
+                }
 
-            if (bError) {
-                MessageBox.error(this._getText("MANDFIELDS"));
-                return;
-            }
+                if (bNewRequest && oHeader.Grup && aItem.length === 0) {
+                    throw new Error(this._getText("MANDFIELDS"));
+                }
 
-            if (bNewRequest && oHeader.Grup && aItem.length === 0) {
-                MessageBox.error(this._getText("MANDPERNR"));
-                return;
-            }
+                // yurtdışı seyahatleri pasaport, vize, uçuş ve otel bilgileri kontrolleri
+                if (oHeader.CountryCode !== "TR") {
+                    aItem.forEach(oItem => {
+                        if (!oItem.ZzpasaportNo || !oItem.ZzpasaportNo || !oItem.ZzpasaportTur || !oItem.ZzpasaportTarih || !oItem.ZzvizeIhtiyac || !oItem.ZzucusIhtiyac || !oItem.ZzotelIhtiyac) {
+                            throw new Error(this._getText("MANDPASSVISAINFO"));
+                        }
 
-            // yurtdışı seyahatleri pasaport, vize, uçuş ve otel bilgileri kontrolleri
-            if (oHeader.CountryCode !== "TR") {
-                aItem.forEach(oItem => {
-                    if (!oItem.ZzpasaportNo || !oItem.ZzpasaportNo || !oItem.ZzpasaportTur || !oItem.ZzpasaportTarih || !oItem.ZzvizeIhtiyac || !oItem.ZzucusIhtiyac || !oItem.ZzotelIhtiyac) {
-                        bError = true;
-                    }
-                });
-            }
+                        // pasaport doküman kontrolü
+                        let bCheckPassport = aAttachmentList.find(oAttachment => oAttachment.Pernr === oItem.Pernr && oAttachment.Type === "P");
+                        if (!bCheckPassport) {
+                            bCheckPassport = aPendingUploadList.find(oAttachment => oAttachment.Pernr === oItem.Pernr && oAttachment.Type === "P");
+                            if (!bCheckPassport) {
+                                throw new Error(this._getText("MANDPASSDOC"));
+                            }
+                        }
 
-            if (bError) {
-                MessageBox.error(this._getText("MANDPASSVISA"));
+                        // vize doküman kontrolü
+                        if (oItem.ZzvizeIhtiyac === "4") {
+                            let bCheckVisa = aAttachmentList.find(oAttachment => oAttachment.Pernr === oItem.Pernr && oAttachment.Type === "V");
+                            if (!bCheckVisa) {
+                                bCheckVisa = aPendingUploadList.find(oAttachment => oAttachment.Pernr === oItem.Pernr && oAttachment.Type === "V");
+                                if (!bCheckVisa) {
+                                    throw new Error(this._getText("MANDVISADOC"));
+                                }
+                            }
+                        }
+                    });
+                }
+
+            } catch (oError) {
+                MessageBox.error(oError.message);
                 return;
             }
 

@@ -205,7 +205,7 @@
 							url="/sap/opu/odata/sap/ZHR_PROJ_041_SRV/AttachmentSet(Pernr='{AttachmentList>Pernr}',Reinr='{AttachmentList>Reinr}',Type='{AttachmentList>Type}',AttachmentId='{AttachmentList>AttachmentId}')/$value"
 							visibleDelete="false" visibleEdit="false">
 							<attributes>
-								<ObjectAttribute title="{i18n>PERNR}" text="{AttachmentList>Pernr}" />
+								<ObjectAttribute title="{i18n>PERSONNEL}" text="{AttachmentList>PernrName}" />
 								<ObjectAttribute title="{i18n>documentType}" text="{AttachmentList>TypeText}" />
 							</attributes>
 						</UploadCollectionItem>

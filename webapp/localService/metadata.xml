@@ -260,6 +260,7 @@
                     <PropertyRef Name="Pernr"/>
                     <PropertyRef Name="Reinr"/>
                 </Key>
+                <Property Name="PernrName" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="TypeText" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Type" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="AttachmentId" Type="Edm.String" Nullable="false" MaxLength="60" sap:unicode="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
@@ -315,10 +316,6 @@
                 <EntitySet Name="ProjectSet" EntityType="ZHR_PROJ_041_SRV.Project" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="AttachmentSet" EntityType="ZHR_PROJ_041_SRV.Attachment" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
                 <EntitySet Name="AttachmentTypeSet" EntityType="ZHR_PROJ_041_SRV.AttachmentType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
-                <AssociationSet Name="Item_to_AttachmentSet" Association="ZHR_PROJ_041_SRV.Item_to_Attachment" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
-                    <End EntitySet="TravelItemSet" Role="FromRole_Item_to_Attachment"/>
-                    <End EntitySet="AttachmentSet" Role="ToRole_Item_to_Attachment"/>
-                </AssociationSet>
                 <AssociationSet Name="Travel_To_ItemSet" Association="ZHR_PROJ_041_SRV.Travel_To_Item" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="TravelSet" Role="FromRole_Travel_To_Item"/>
                     <End EntitySet="TravelItemSet" Role="ToRole_Travel_To_Item"/>
@@ -330,6 +327,10 @@
                 <AssociationSet Name="Item_to_CostSet" Association="ZHR_PROJ_041_SRV.Item_to_Cost" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="TravelItemSet" Role="FromRole_Item_to_Cost"/>
                     <End EntitySet="EstimatedCostSet" Role="ToRole_Item_to_Cost"/>
+                </AssociationSet>
+                <AssociationSet Name="Item_to_Attachment_AssocSet" Association="ZHR_PROJ_041_SRV.Item_to_Attachment" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="TravelItemSet" Role="FromRole_Item_to_Attachment"/>
+                    <End EntitySet="AttachmentSet" Role="ToRole_Item_to_Attachment"/>
                 </AssociationSet>
                 <FunctionImport Name="CountryRegion" ReturnType="ZHR_PROJ_041_SRV.CountryRegion" EntitySet="CountryRegionSet" m:HttpMethod="GET">
                     <Parameter Name="Region" Type="Edm.String" Mode="In" MaxLength="5"/>
