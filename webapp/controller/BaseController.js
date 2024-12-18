@@ -404,22 +404,22 @@ sap.ui.define([
             this._openMessagePopover(oMessagesButton);
         },
 
-        _checkMessages: function () {
+        _checkMessages: function (sButtonId) {
             let oMessageManager = sap.ui.getCore().getMessageManager(),
                 oMessages = oMessageManager.getMessageModel().getData(),
                 aMessageTexts = oMessages.map(oItem => oItem.message);
 
             aMessageTexts = [...new Set(aMessageTexts)];
             if (aMessageTexts.length > 0) {
-                this._waitForButtonRendering().then((oMessagesButton) => {
+                this._waitForButtonRendering(sButtonId).then((oMessagesButton) => {
                     this._openMessagePopover(oMessagesButton);
                 });
             }
         },
 
-        _waitForButtonRendering: function () {
+        _waitForButtonRendering: function (sButtonId) {
             return new Promise((resolve) => {
-                let oMessagesButton = this.byId("idMessagePopover");
+                let oMessagesButton = this.byId(sButtonId);
 
                 // Eğer butonun DOM referansı varsa, render edilmiş demektir
                 if (oMessagesButton.getDomRef()) {
@@ -469,15 +469,8 @@ sap.ui.define([
                         })
                     }
                 });
-                if (!oMessagesButton) {
-                    oMessagesButton = this.byId("idMessagePopover")
-                }
-            }
-            if (!oMessagesButton) {
-                oMessagesButton = this.byId("idMessagePopover")
             }
 
-            oMessagesButton.addDependent(this._oMessagePopover);
             this._oMessagePopover.openBy(oMessagesButton);
         },
 
@@ -595,7 +588,9 @@ sap.ui.define([
         },
 
         _postSave: async function (bCreate) {
-            let oDeepData = this.getView().getModel("Header").getData();
+            let oDeepData = this.getView().getModel("Header").getData(),
+                sMessagePopoverButtonId = "idMessagePopoverDetail";
+
             oDeepData.MESSAGERETURNSET = [];
             oDeepData.TRAVELITEMSET = this.getView().getModel("UserList").getData();
             oDeepData.TRAVELITEMSET.forEach(oTravelItem => {
@@ -635,6 +630,7 @@ sap.ui.define([
                 });
 
                 if (oDeepData.Grup || !bHasError) {
+                    sMessagePopoverButtonId = "idMessagePopover";
                     this.getModel("appView").setProperty("/postResponse", oResponse);
                     this.byId("idUploadCollection").upload();
 
@@ -644,7 +640,7 @@ sap.ui.define([
 
             } finally {
                 _oGlobalBusyDialog.close();
-                this._checkMessages();
+                this._checkMessages(sMessagePopoverButtonId);
             }
         },
 

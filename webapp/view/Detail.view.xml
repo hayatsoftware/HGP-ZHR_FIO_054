@@ -49,7 +49,7 @@
 			<s:CloseAction press=".onCloseDetailPress" />
 		</s:closeAction>
 		<s:messagesIndicator>
-			<s:MessagesIndicator id="idMessagePopover" press=".onMessageButtonPress" />
+			<s:MessagesIndicator id="idMessagePopoverDetail" press=".onMessageButtonPress" />
 		</s:messagesIndicator>
 		<s:footerMainAction>
 			<s:FooterMainAction text="{i18n>SAVE}" press=".onSaveCreateTravel" />
