@@ -2,8 +2,9 @@ sap.ui.define([
 	"./BaseController",
 	"sap/ui/model/json/JSONModel",
 	"sap/m/PDFViewer",
-	"sap/m/UploadCollectionParameter"
-], function (BaseController, JSONModel, PDFViewer, UploadCollectionParameter) {
+	"sap/m/UploadCollectionParameter",
+	"sap/m/ObjectAttribute"
+], function (BaseController, JSONModel, PDFViewer, UploadCollectionParameter, ObjectAttribute) {
 	"use strict";
 
 	var _oGlobalBusyDialog = new sap.m.BusyDialog();
@@ -266,7 +267,7 @@ sap.ui.define([
 			let oHeaderParameter = this._aPendingUploaderParameters.find(_oParam => _oParam.Id === oFileUploader.getId()),
 				oAppModel = this.getModel("appView");
 
-			oHeaderParameter.Reinr = oAppModel.getProperty("/postResponse/TRAVELITEMSET/results").find(_oItem => _oItem.Pernr = oHeaderParameter.Pernr).Reinr;
+			oHeaderParameter.Reinr = oAppModel.getProperty("/postResponse/TRAVELITEMSET/results").find(_oItem => _oItem.Pernr === oHeaderParameter.Pernr).Reinr;
 
 			let oModel = this.getModel();
 			oModel.refreshSecurityToken();
@@ -326,6 +327,29 @@ sap.ui.define([
 					Pernr: oSelectedDocument.Pernr,
 					Type: oSelectedDocument.Type
 				});
+
+				let oModel = this.getModel(),
+					aUploadCollectionItems = this.byId("idUploadCollection").getItems(),
+					aUserList = this.getModel("UserList").getData(),
+					oResourceBundle = this.getResourceBundle();
+
+				let oUploadedItem = aUploadCollectionItems.find(oItem => oItem.getAssociation("fileUploader") === this._oUploader.getId()),
+					oSelectedPersonnel = aUserList.find(oUser => oUser.Pernr === oSelectedDocument.Pernr),
+					sAttachmentTypeBindingPath = oModel.createKey("/AttachmentTypeSet", {
+						Id: oSelectedDocument.Type
+					});
+
+				oUploadedItem.addAttribute(
+					new ObjectAttribute({
+						title: oResourceBundle.getText("PERSONNEL"),
+						text: oSelectedPersonnel.FirstName + " " + oSelectedPersonnel.LastName
+					}));
+
+				oUploadedItem.addAttribute(
+					new ObjectAttribute({
+						title: oResourceBundle.getText("documentType"),
+						text: oModel.getProperty(sAttachmentTypeBindingPath + "/Name")
+					}));
 			}
 
 			oEvent.getSource().getParent().close();
