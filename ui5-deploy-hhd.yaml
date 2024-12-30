@@ -12,16 +12,16 @@ builder:
       afterTask: generateCachebusterInfo
       configuration:
         target:
-          url: https://mobiltest.hayat.com.tr/
-          client: "100"
+          url: https://hrdev1.hayat.com.tr:1443/
+          client: "500"
           auth: basic
         credentials:
-          username: env:SAP_USER
-          password: env:SAP_PASSWORD
+          username: env:HHD_USER
+          password: env:HHD_PASSWORD
         app:
           name: ZHR_FIO_054
           description: Seyahat Talebi Oluşturma
-          package: ZHR_005
-          transport: HGDK902093
+          package: ZHR_015
+          transport: HHDK9A0A5H
         exclude:
           - /test/
