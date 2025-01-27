@@ -83,6 +83,8 @@ sap.ui.define([
 
 			if (this._bNewRequest && !bGroupTravel) {
 				let oEmployeeDefaults = await this._getEmployeeDefaults();
+				this.ZzGrup = oEmployeeDefaults.ZzGrup;
+
 				aUserList.push({
 					Pernr: oEmployeeDefaults.Pernr,
 					FirstName: oEmployeeDefaults.FirstName,
@@ -187,6 +189,29 @@ sap.ui.define([
 
 		onSaveCreateTravel: function () {
 			this.getView().setModel(new JSONModel(this._aPendingUploaderParameters), "PendingUploadList");
+
+			var oResourceBundle = this.getResourceBundle();
+			// Bugünün tarihini al
+			const today = new Date();
+			// Karşılaştırılacak tarih (31 Mart 2025)
+			const compareDate = new Date('2025-03-31');
+			if (today < compareDate ) { 
+				if ( this.getModel("Header").getProperty('/TripActivity') !== 'G' && this.ZzGrup == '01' ) { 
+					sap.m.MessageBox.information( oResourceBundle.getText("paymentInfo") , {
+						title: "Information",                                // default
+						onClose: null,                                       // default
+						styleClass: "",                                      // default
+						actions: sap.m.MessageBox.Action.OK,                 // default
+						emphasizedAction: sap.m.MessageBox.Action.OK,        // default
+						initialFocus: null,                                  // default
+						textDirection: sap.ui.core.TextDirection.Inherit,    // default
+						dependentOn: null                                    // default
+					});
+
+					return;
+				 }
+				
+			 }
 
 			this.resetMessageModel();
 			this._saveCreateTravel(this._bNewRequest);
