@@ -106,54 +106,92 @@ sap.ui.define([
                 sDialogId = "",
                 sTitle = "";
 
-            switch (sType) {
-                case "country":
-                    sModel = "/CountriesSet";
-                    sDialogId = "idCountrySH";
-                    sTitle = this._getText("countrySHTitle");
-                    break;
+            if (sType === "wbselement") {
+                this._sPath = oEvent.getSource().getBindingContext("UserList").getPath();
 
-                case "region":
-                    sModel = "/RegionSet";
-                    sDialogId = "idRegionSH";
-                    sTitle = this._getText("regionSHTitle");
-                    aFilter.push(new Filter("CountryID", FilterOperator.EQ, sFilterParam));
-                    break;
+                if (!this._oWbsElementSelectDialog) {
+                    this._oWbsElementSelectDialog = new sap.m.SelectDialog("idWbsElementSH", {
+                        title: this._getText("wbsElementSHTitle"),
+                        items: {
+                            path: "/WbsElementSet",
+                            parameters: {
+                                operationMode: sap.ui.model.odata.OperationMode.Server
+                            },
+                            template: new sap.m.StandardListItem({
+                                title: "{Id}",
+                                description: "{Name}"
+                            })
+                        },
+                        confirm: (_oEvent) => {
+                            let oUserListModel = this.getView().getModel("UserList"),
+                                oSelectedItem = _oEvent.getParameter("selectedItem"),
+                                sKey = oSelectedItem.getTitle(),
+                                sText = oSelectedItem.getDescription();
 
-                case "costcenter":
-                    this._sPath = oEvent.getSource().getBindingContext("UserList").getPath();
-                    sModel = "/CostCenterSet";
-                    sDialogId = "idCostCenterSH";
-                    sTitle = this._getText("costCenterSHTitle");
-                    break;
+                            oUserListModel.setProperty(this._sPath + "/WbsElement", sKey);
+                            oUserListModel.setProperty(this._sPath + "/WbsElementName", sText);
+                            oUserListModel.refresh(true);
+                        },
+                        search: (_oEvent) => {
+                            let aFilter = [],
+                                sValue = _oEvent.getParameter("value"),
+                                bClearButtonPressed = _oEvent.getParameter("clearButtonPressed");
 
-                case "internalorder":
-                    this._sPath = oEvent.getSource().getBindingContext("UserList").getPath();
-                    sModel = "/InternalOrdersSet";
-                    sDialogId = "idInternalOrderSH";
-                    sTitle = this._getText("internalOrderSHTitle");
-                    break;
+                            if (!bClearButtonPressed && sValue) {
+                                aFilter = [new Filter("Name", FilterOperator.Contains, sValue)];
+                            }
 
-                case "wbselement":
-                    this._sPath = oEvent.getSource().getBindingContext("UserList").getPath();
-                    sModel = "/WbsElementSet";
-                    sDialogId = "idWbsElementSH";
-                    sTitle = this._getText("wbsElementSHTitle");
-                    break;
-            }
+                            _oEvent.getParameter("itemsBinding").filter(aFilter);
+                        }
+                    });
 
-            _oGlobalBusyDialog.open();
-
-            try {
-                let oResponse = await this._sendQueryData(sModel, aFilter);
-                if (oResponse.results) {
-                    this.openDialogSH(sDialogId, oResponse.results, sTitle, sType)
+                    this.getView().addDependent(this._oWbsElementSelectDialog);
                 }
 
-            } finally {
-                _oGlobalBusyDialog.close();
-            }
+                this._oWbsElementSelectDialog.open();
 
+            } else {
+                switch (sType) {
+                    case "country":
+                        sModel = "/CountriesSet";
+                        sDialogId = "idCountrySH";
+                        sTitle = this._getText("countrySHTitle");
+                        break;
+
+                    case "region":
+                        sModel = "/RegionSet";
+                        sDialogId = "idRegionSH";
+                        sTitle = this._getText("regionSHTitle");
+                        aFilter.push(new Filter("CountryID", FilterOperator.EQ, sFilterParam));
+                        break;
+
+                    case "costcenter":
+                        this._sPath = oEvent.getSource().getBindingContext("UserList").getPath();
+                        sModel = "/CostCenterSet";
+                        sDialogId = "idCostCenterSH";
+                        sTitle = this._getText("costCenterSHTitle");
+                        break;
+
+                    case "internalorder":
+                        this._sPath = oEvent.getSource().getBindingContext("UserList").getPath();
+                        sModel = "/InternalOrdersSet";
+                        sDialogId = "idInternalOrderSH";
+                        sTitle = this._getText("internalOrderSHTitle");
+                        break;
+                }
+
+                _oGlobalBusyDialog.open();
+
+                try {
+                    let oResponse = await this._sendQueryData(sModel, aFilter);
+                    if (oResponse.results) {
+                        this.openDialogSH(sDialogId, oResponse.results, sTitle, sType)
+                    }
+
+                } finally {
+                    _oGlobalBusyDialog.close();
+                }
+            }
         },
 
         openPopover: function (sPopoverId, sFragmentName, oSource) {
@@ -247,16 +285,14 @@ sap.ui.define([
         searchDialogSH: function (oEvent) {
             var sValue = oEvent.getParameter("value"),
                 oFilters = new Filter({
-                    filters: [
-                    ],
+                    filters: [],
                     and: false,
                 }),
                 oBinding = oEvent.getParameter("itemsBinding");
 
             if (!!sValue === true) {
-                oFilters.aFilters.push(new Filter("Id", FilterOperator.Contains, sValue)),
-                    oFilters.aFilters.push(new Filter("Name", FilterOperator.Contains, sValue));
-
+                oFilters.aFilters.push(new Filter("Id", FilterOperator.Contains, sValue));
+                oFilters.aFilters.push(new Filter("Name", FilterOperator.Contains, sValue));
                 oBinding.filter([oFilters]);
             } else {
                 oBinding.filter([]);
