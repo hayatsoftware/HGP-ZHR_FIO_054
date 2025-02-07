@@ -133,7 +133,7 @@ sap.ui.define([
                         },
                         search: (_oEvent) => {
                             let aFilter = [],
-                                sValue = _oEvent.getParameter("value").replaceAll("-", "").trim(),
+                                sValue = _oEvent.getParameter("value").trim(),
                                 bClearButtonPressed = _oEvent.getParameter("clearButtonPressed");
 
                             if (!bClearButtonPressed && sValue) {
