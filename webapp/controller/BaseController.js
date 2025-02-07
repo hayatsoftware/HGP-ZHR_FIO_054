@@ -118,27 +118,26 @@ sap.ui.define([
                                 operationMode: sap.ui.model.odata.OperationMode.Server
                             },
                             template: new sap.m.StandardListItem({
-                                title: "{Id}",
+                                info: "{Id}",
+                                title: "{Posid}",
                                 description: "{Name}"
                             })
                         },
                         confirm: (_oEvent) => {
                             let oUserListModel = this.getView().getModel("UserList"),
-                                oSelectedItem = _oEvent.getParameter("selectedItem"),
-                                sKey = oSelectedItem.getTitle(),
-                                sText = oSelectedItem.getDescription();
+                                oSelectedItemContext = _oEvent.getParameter("selectedItem").getBindingContext().getProperty();
 
-                            oUserListModel.setProperty(this._sPath + "/WbsElement", sKey);
-                            oUserListModel.setProperty(this._sPath + "/WbsElementName", sText);
+                            oUserListModel.setProperty(this._sPath + "/WbsElement", oSelectedItemContext.Id);
+                            oUserListModel.setProperty(this._sPath + "/WbsElementName", oSelectedItemContext.Name);
                             oUserListModel.refresh(true);
                         },
                         search: (_oEvent) => {
                             let aFilter = [],
-                                sValue = _oEvent.getParameter("value"),
+                                sValue = _oEvent.getParameter("value").replaceAll("-", "").trim(),
                                 bClearButtonPressed = _oEvent.getParameter("clearButtonPressed");
 
                             if (!bClearButtonPressed && sValue) {
-                                aFilter = [new Filter("Name", FilterOperator.Contains, sValue)];
+                                aFilter = [new Filter("Posid", FilterOperator.Contains, sValue)];
                             }
 
                             _oEvent.getParameter("itemsBinding").filter(aFilter);
