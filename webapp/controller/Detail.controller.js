@@ -197,18 +197,20 @@ sap.ui.define([
 			const compareDate = new Date('2025-03-31');
 			if (today < compareDate ) { 
 				if ( this.getModel("Header").getProperty('/TripActivity') !== 'G' && this.ZzGrup == '01' ) { 
-					sap.m.MessageBox.information( oResourceBundle.getText("paymentInfo") , {
-						title: "Information",                                // default
+					
+					sap.m.MessageBox.confirm( oResourceBundle.getText("paymentInfo"), {
+						title: "Confirm",                                    // default
 						onClose: null,                                       // default
 						styleClass: "",                                      // default
-						actions: sap.m.MessageBox.Action.OK,                 // default
+						actions: [ sap.m.MessageBox.Action.OK,
+								   sap.m.MessageBox.Action.CANCEL ],         // default
 						emphasizedAction: sap.m.MessageBox.Action.OK,        // default
 						initialFocus: null,                                  // default
 						textDirection: sap.ui.core.TextDirection.Inherit,    // default
 						dependentOn: null                                    // default
 					});
 
-					return;
+					// return;
 				 }
 				
 			 }
