@@ -43,6 +43,7 @@ sap.ui.define([
 			this._setTitle(sTitleKey);
 
 			this.resetMessageModel();
+			this._uploadCollectionDragAndDropDisable();
 			this._getData(sReinr, sGrupSeyahatNo);
 		},
 
@@ -61,10 +62,25 @@ sap.ui.define([
 
 			let sTitleKey = oScreenModel.getProperty("/isGroupTravel") ? "newGroupTravelRequest" : "newTravelRequest";
 			this._setTitle(sTitleKey);
-
+			this._uploadCollectionDragAndDropDisable();
 			this.resetMessageModel();
 			this._getHeaderData();
 			this._getItemData();
+		},
+		_uploadCollectionDragAndDropDisable: function () {
+			let oUploadCollection = this.byId("idUploadCollection");
+			 
+			oUploadCollection.addDelegate({
+				ondragenter: function (oEvent) {
+					oEvent.stopPropagation()
+				},
+				ondragover: function (oEvent) {
+					oEvent.stopPropagation()
+				},
+				ondrop: function (oEvent) {
+					oEvent.stopPropagation()
+				}
+			}, true);
 		},
 
 		_getHeaderData: async function () {
@@ -195,28 +211,35 @@ sap.ui.define([
 			const today = new Date();
 			// Karşılaştırılacak tarih (31 Mart 2025)
 			const compareDate = new Date('2025-03-31');
-			if (today < compareDate ) { 
-				if ( this.getModel("Header").getProperty('/TripActivity') !== 'G' && this.ZzGrup == '01' ) { 
-					
-					sap.m.MessageBox.confirm( oResourceBundle.getText("paymentInfo"), {
+			if (today < compareDate) {
+				if (this.getModel("Header").getProperty('/TripActivity') !== 'G' && this.ZzGrup == '01') {
+
+					sap.m.MessageBox.confirm(oResourceBundle.getText("paymentInfo"), {
 						title: "Confirm",                                    // default
 						onClose: null,                                       // default
 						styleClass: "",                                      // default
-						actions: [ sap.m.MessageBox.Action.OK,
-								   sap.m.MessageBox.Action.CANCEL ],         // default
+						actions: [sap.m.MessageBox.Action.OK],         // default
 						emphasizedAction: sap.m.MessageBox.Action.OK,        // default
 						initialFocus: null,                                  // default
 						textDirection: sap.ui.core.TextDirection.Inherit,    // default
-						dependentOn: null                                    // default
+						dependentOn: null,
+						onClose: function (oAction) {
+							if (oAction === sap.m.MessageBox.Action.OK) {
+								this.resetMessageModel();
+								this._saveCreateTravel(this._bNewRequest);
+							}
+						}.bind(this)
 					});
 
 					// return;
-				 }
-				
-			 }
+				} else {
+					this.resetMessageModel();
+					this._saveCreateTravel(this._bNewRequest);
+				}
 
-			this.resetMessageModel();
-			this._saveCreateTravel(this._bNewRequest);
+			}
+
+
 		},
 
 		onAdditionalInfoTagPress: async function (oEvent, sSelectedTag) {

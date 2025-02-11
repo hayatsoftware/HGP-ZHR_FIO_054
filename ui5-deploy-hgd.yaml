@@ -22,6 +22,6 @@ builder:
           name: ZHR_FIO_054
           description: Seyahat Talebi Oluşturma
           package: ZHR_005
-          transport: HGDK902185
+          transport: HGDK902189
         exclude:
           - /test/

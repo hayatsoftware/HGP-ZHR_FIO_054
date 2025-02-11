@@ -199,11 +199,11 @@
 				<!-- ekler -->
 				<UploadCollection id="idUploadCollection" items="{AttachmentList>/}" uploadUrl="/sap/opu/odata/sap/ZHR_PROJ_041_SRV/AttachmentSet" instantUpload="false"
 					uploadButtonInvisible="{= !${screenModels>/generalEditable} }" change=".onUploadChange" beforeUploadStarts=".onBeforeUploadStarts"
-					uploadComplete=".onUploadComplete" class="sapUiMediumMarginBottom">
+					uploadComplete=".onUploadComplete" class="sapUiMediumMarginBottom" noDataDescription="{i18n>noDataDescription}">
 					<items>
 						<UploadCollectionItem documentId="{AttachmentList>AttachmentId}" fileName="{AttachmentList>Filename}" mimeType="{AttachmentList>Mimetype}"
 							url="/sap/opu/odata/sap/ZHR_PROJ_041_SRV/AttachmentSet(Pernr='{AttachmentList>Pernr}',Reinr='{AttachmentList>Reinr}',Type='{AttachmentList>Type}',AttachmentId='{AttachmentList>AttachmentId}')/$value"
-							visibleDelete="false" visibleEdit="false">
+							visibleDelete="false" visibleEdit="false" >
 							<attributes>
 								<ObjectAttribute title="{i18n>PERSONNEL}" text="{AttachmentList>PernrName}" />
 								<ObjectAttribute title="{i18n>documentType}" text="{AttachmentList>TypeText}" />
