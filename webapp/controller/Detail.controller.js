@@ -206,38 +206,38 @@ sap.ui.define([
 		onSaveCreateTravel: function () {
 			this.getView().setModel(new JSONModel(this._aPendingUploaderParameters), "PendingUploadList");
 
-			var oResourceBundle = this.getResourceBundle();
+			//var oResourceBundle = this.getResourceBundle();
 			// Bugünün tarihini al
-			const today = new Date();
+			//const today = new Date();
 			// Karşılaştırılacak tarih (31 Mart 2025)
-			const compareDate = new Date('2025-03-31');
-			if (today < compareDate) {
-				if (this.getModel("Header").getProperty('/TripActivity') !== 'G' && this.ZzGrup == '01') {
+			//const compareDate = new Date('2025-03-31');
+			// if (today < compareDate) {
+			// 	if (this.getModel("Header").getProperty('/TripActivity') !== 'G' && this.ZzGrup == '01') {
 
-					sap.m.MessageBox.confirm(oResourceBundle.getText("paymentInfo"), {
-						title: "Confirm",                                    // default
-						onClose: null,                                       // default
-						styleClass: "",                                      // default
-						actions: [sap.m.MessageBox.Action.OK],         // default
-						emphasizedAction: sap.m.MessageBox.Action.OK,        // default
-						initialFocus: null,                                  // default
-						textDirection: sap.ui.core.TextDirection.Inherit,    // default
-						dependentOn: null,
-						onClose: function (oAction) {
-							if (oAction === sap.m.MessageBox.Action.OK) {
-								this.resetMessageModel();
-								this._saveCreateTravel(this._bNewRequest);
-							}
-						}.bind(this)
-					});
+			// 		sap.m.MessageBox.confirm(oResourceBundle.getText("paymentInfo"), {
+			// 			title: "Confirm",                                    // default
+			// 			onClose: null,                                       // default
+			// 			styleClass: "",                                      // default
+			// 			actions: [sap.m.MessageBox.Action.OK],         // default
+			// 			emphasizedAction: sap.m.MessageBox.Action.OK,        // default
+			// 			initialFocus: null,                                  // default
+			// 			textDirection: sap.ui.core.TextDirection.Inherit,    // default
+			// 			dependentOn: null,
+			// 			onClose: function (oAction) {
+			// 				if (oAction === sap.m.MessageBox.Action.OK) {
+			// 					this.resetMessageModel();
+			// 					this._saveCreateTravel(this._bNewRequest);
+			// 				}
+			// 			}.bind(this)
+			// 		});
 
-					// return;
-				} else {
+			// 		// return;
+			// 	} else {
 					this.resetMessageModel();
 					this._saveCreateTravel(this._bNewRequest);
-				}
+			//	}
 
-			}
+			// }
 
 
 		},
