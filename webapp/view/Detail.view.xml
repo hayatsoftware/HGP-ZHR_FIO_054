@@ -145,8 +145,8 @@
 						<Column demandPopin="true" minScreenWidth="Tablet"><Text text="{i18n>WBSELEMENT}" /></Column>
 						<Column demandPopin="true" minScreenWidth="Desktop" visible="{= ${Header>/CountryCode} !== 'TR' }"><Text text="{i18n>passportInfo}" /></Column>
 						<Column demandPopin="true" minScreenWidth="Desktop" visible="{= ${Header>/CountryCode} !== 'TR' }"><Text text="{i18n>visaInfo}" /></Column>
-						<Column demandPopin="true" minScreenWidth="Desktop" visible="{= ${Header>/CountryCode} !== 'TR' }"><Text text="{i18n>flightInfo}" /></Column>
-						<Column demandPopin="true" minScreenWidth="Desktop" visible="{= ${Header>/CountryCode} !== 'TR' }"><Text text="{i18n>hotelInfo}" /></Column>
+						<Column demandPopin="true" minScreenWidth="Desktop" ><Text text="{i18n>flightInfo}" /></Column>
+						<Column demandPopin="true" minScreenWidth="Desktop" ><Text text="{i18n>hotelInfo}" /></Column>
 					</columns>
 					<ColumnListItem>
 						<VBox>

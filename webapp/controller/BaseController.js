@@ -617,6 +617,15 @@ sap.ui.define([
                     });
                 }
 
+                if (oHeader.CountryCode === "TR") {
+                    aItem.forEach(oItem => {
+                        if ( !oItem.ZzucusIhtiyac || !oItem.ZzotelIhtiyac) {
+                            throw new Error(this._getText("MANDHOTELFLIGHTINFO"));
+                        }
+                    });
+                }
+            
+
             } catch (oError) {
                 MessageBox.error(oError.message);
                 return;
