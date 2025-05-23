@@ -207,10 +207,17 @@
 							<attributes>
 								<ObjectAttribute title="{i18n>PERSONNEL}" text="{AttachmentList>PernrName}" />
 								<ObjectAttribute title="{i18n>documentType}" text="{AttachmentList>TypeText}" />
+							
 							</attributes>
+								<statuses>
+						<ObjectStatus title="{i18n>uploadedBy}" text="{AttachmentList>Ernam}" />
+						<ObjectStatus title="{i18n>uploadedDate}" text="{AttachmentList>Erdat}" />
+						<ObjectStatus title="{i18n>uploadedTime}" text="{AttachmentList>Erzet}" />
+					</statuses>
 						</UploadCollectionItem>
 					</items>
 				</UploadCollection>
+				
 			</VBox>
 		</s:content>
 	</s:SemanticPage>

@@ -298,16 +298,29 @@ sap.ui.define([
 		onUploadChange: function (oEvent) {
 			let oScreenModel = this.getModel("screenModels"),
 				oHeader = this.getModel("Header").getData(),
-				aUserList = this.getModel("UserList").getData();
+				aUserList = this.getModel("UserList").getData(),
+				oUploadCollection = oEvent.getSource();
 
 			oScreenModel.setProperty("/selectedDocument/PernrEditable", oHeader.Grup);
 			oScreenModel.setProperty("/selectedDocument/Pernr", oHeader.Grup ? "" : aUserList[0].Pernr);
 			oScreenModel.setProperty("/selectedDocument/Type", "");
 
+			let oModel = this.getModel();
+			let sCSRF = oModel.getHeaders()["x-csrf-token"];
+
+			// Header Token
+			var oCustomerHeaderToken = new UploadCollectionParameter({
+				name: "x-csrf-token",
+				value: sCSRF
+			});
+			oUploadCollection.addHeaderParameter(oCustomerHeaderToken);
+
+
 			this._oUploader = oEvent.getSource()._oFileUploader;
 			this.openDialog("documentInfoDialog", "com.hayat.grupseyahat.grupseyahattalebi.fragments.DocumentInfoDialog");
 		},
 
+		
 		onBeforeUploadStarts: function (oEvent) {
 			let oRequestParam = oEvent.getParameters().getHeaderParameter().find(_oParam => _oParam.getName().includes("requestId"));
 			let oFileUploader = oEvent.getSource()._aFileUploadersForPendingUpload.find(_oUploader => {
@@ -348,11 +361,16 @@ sap.ui.define([
 				value: oHeaderParameter.Type
 			});
 
-			oEvent.getParameters().addHeaderParameter(oCSRFTokenParameter);
+		//	oEvent.getParameters().addHeaderParameter(oCSRFTokenParameter);
 			oEvent.getParameters().addHeaderParameter(oFilenameParameter);
 			oEvent.getParameters().addHeaderParameter(oTravelNumberParameter);
 			oEvent.getParameters().addHeaderParameter(oPersonnelNumberParameter);
 			oEvent.getParameters().addHeaderParameter(oDocumentTypeParameter);
+
+			setTimeout(function() {
+				//sap.m.MessageToast.show("Event beforeUploadStarts triggered");
+			}, 4000);
+
 		},
 
 		onUploadComplete: function () {
