@@ -683,6 +683,7 @@ sap.ui.define([
                 if (oDeepData.Grup || !bHasError) {
                     this.getModel("appView").setProperty("/postResponse", oResponse);
                     this.byId("idUploadCollection").upload();
+                    //this._uploadAttachments();
 
                     let bReplace = !Device.system.phone;
                     this.getRouter().navTo("list", {}, bReplace);
@@ -693,6 +694,37 @@ sap.ui.define([
                 this._checkMessages();
             }
         },
+
+        _uploadAttachments: function () {
+            const oUploadCollection = this.byId("idUploadCollection");
+            const aItems = oUploadCollection.getItems();
+
+            const aPendingItems = aItems.filter((oItem) => {
+                return oItem._status !== "display";
+            });
+
+            if (aPendingItems.length === 0) {
+                sap.m.MessageToast.show("Yüklenecek dosya bulunamadı.");
+                return;
+            }
+
+            const uploadNext = (index) => {
+                if (index < aPendingItems.length) {
+                const oItem = aPendingItems[index];
+
+                oUploadCollection.uploadItem(oItem);
+
+                oItem.attachUploadComplete(() => {
+                    setTimeout(() => {
+                    uploadNext(index + 1);
+                    }, 300); 
+                });
+                }
+            };
+
+            uploadNext(0); 
+        },
+
 
         _getEmployeeDefaults: function () {
             let oModel = this.getModel(),

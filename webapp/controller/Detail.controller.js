@@ -333,7 +333,7 @@ sap.ui.define([
 			oHeaderParameter.Reinr = oAppModel.getProperty("/postResponse/TRAVELITEMSET/results").find(_oItem => _oItem.Pernr === oHeaderParameter.Pernr).Reinr;
 
 			let oModel = this.getModel();
-			oModel.refreshSecurityToken();
+			//oModel.refreshSecurityToken();
 			let sCSRF = oModel.getHeaders()["x-csrf-token"];
 
 			let oCSRFTokenParameter = new UploadCollectionParameter({
@@ -361,7 +361,7 @@ sap.ui.define([
 				value: oHeaderParameter.Type
 			});
 
-		//	oEvent.getParameters().addHeaderParameter(oCSRFTokenParameter);
+			oEvent.getParameters().addHeaderParameter(oCSRFTokenParameter);
 			oEvent.getParameters().addHeaderParameter(oFilenameParameter);
 			oEvent.getParameters().addHeaderParameter(oTravelNumberParameter);
 			oEvent.getParameters().addHeaderParameter(oPersonnelNumberParameter);
