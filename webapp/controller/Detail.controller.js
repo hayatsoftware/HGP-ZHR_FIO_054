@@ -361,7 +361,7 @@ sap.ui.define([
 				value: oHeaderParameter.Type
 			});
 
-			oEvent.getParameters().addHeaderParameter(oCSRFTokenParameter);
+			//oEvent.getParameters().addHeaderParameter(oCSRFTokenParameter);
 			oEvent.getParameters().addHeaderParameter(oFilenameParameter);
 			oEvent.getParameters().addHeaderParameter(oTravelNumberParameter);
 			oEvent.getParameters().addHeaderParameter(oPersonnelNumberParameter);
