@@ -34,6 +34,11 @@
 				</VBox>
 			</FlexBox>
 		</s:headerContent>
+			<s:footerCustomActions>
+			<Button text="{i18n>cancel}" type="Reject" press=".onCancelTravel" visible="{Header>/Cancelable}" />
+		</s:footerCustomActions>
+
+
 		<s:editAction>
 			<s:EditAction enabled="{Header>/Editable}" visible="{= !${screenModels>/generalEditable} }" press=".toggleEdit" />
 		</s:editAction>

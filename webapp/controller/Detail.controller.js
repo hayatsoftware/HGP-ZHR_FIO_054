@@ -241,6 +241,30 @@ sap.ui.define([
 
 
 		},
+		
+		onCancelTravel: async function () {
+			var oUrlParameters = {};
+
+            _oGlobalBusyDialog.open();
+			oUrlParameters.Reinr = this.getModel("Header").getProperty("/Reinr");
+
+            try {
+                let bHasError = false,
+                    oResponse = await this._callFunction("/CancelTravel", "GET",  oUrlParameters);
+                if (!bHasError) {
+                    let bReplace = !Device.system.phone;
+                    this.getRouter().navTo("list", {}, bReplace);
+
+					sap.m.MessageToast.show(this.getResourceBundle().getText("travelCancelled"), {
+						closeOnBrowserNavigation: false
+					});
+                }
+
+            } finally {
+                _oGlobalBusyDialog.close();
+                this._checkMessages();
+            }
+        },
 
 		onAdditionalInfoTagPress: async function (oEvent, sSelectedTag) {
 			let oScreenModel = this.getModel("screenModels"),
