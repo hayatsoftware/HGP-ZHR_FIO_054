@@ -3,8 +3,9 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/m/PDFViewer",
 	"sap/m/UploadCollectionParameter",
-	"sap/m/ObjectAttribute"
-], function (BaseController, JSONModel, PDFViewer, UploadCollectionParameter, ObjectAttribute) {
+	"sap/m/ObjectAttribute",
+	"sap/ui/Device",
+], function (BaseController, JSONModel, PDFViewer, UploadCollectionParameter, ObjectAttribute, Device) {
 	"use strict";
 
 	var _oGlobalBusyDialog = new sap.m.BusyDialog();
